@@ -24,6 +24,8 @@ function check_winter {
   [ "$EDGE" -eq 1 ] && CORE_HASH="$WINTERCMS_EDGE_CORE_HASH" || CORE_HASH="$WINTERCMS_CORE_HASH";
   [ "$EDGE" -eq 1 ] && CORE_BUILD="$WINTERCMS_EDGE_BUILD" || CORE_BUILD="$WINTERCMS_BUILD";
 
+  # curl -X POST -fsS --connect-timeout 15 --url http://wintercms.com/api/core/update \
+  # curl -X POST -fsS --connect-timeout 15 --url http://api.wintercms.com/api/core/update \
   curl -X POST -fsS --connect-timeout 15 --url http://gateway.wintercms.com/api/core/update \
    -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$WINTERCMS_SERVER_HASH" -F "edge=$EDGE" \
     | jq '. | { build: .core.build, hash: .core.hash, update: .update, updates: .core.updates }' || exit 1
@@ -37,7 +39,7 @@ function update_checksum {
   fi
 
   local ARCHIVE="wintercms-$SLUG.tar.gz"
-  curl -o $ARCHIVE -fS#L --connect-timeout 15 https://codeload.github.com/wintercms/winter/tar.gz/$SLUG || exit 1;
+  curl -o $ARCHIVE -fS#L --connect-timeout 15 https://github.com/wintercms/winter/archive/refs/tags/$SLUG.tar.gz || exit 1;
   if hash sha1sum 2>&-; then
     sha1sum $ARCHIVE | awk '{print $1}'
   elif hash openssl 2>&-; then
@@ -217,7 +219,7 @@ function update_buildtags {
   echo -e "\n${edgeTagsMarkdown[*]}" >> README_TMP.md
   echo -e "\n### Develop Tags" >> README_TMP.md
   echo -e "\n${developTagsMarkdown[*]}" >> README_TMP.md
-  sed -n -e '/Legacy Tags/,$p' README.md >> README_TMP.md
+  sed -n -e '/# composer/,$p' README.md >> README_TMP.md
   mv README_TMP.md README.md
 }
 
@@ -263,8 +265,9 @@ echo "Automat: `date`"
 [ "$REWRITE_ONLY" ] && echo ' - Rewriting Dockerfiles and README'
 
 echo " - Querying Winter CMS API for updates..."
-STABLE_RESPONSE=$(check_winter)
-if [ "$(echo "$STABLE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
+# STABLE_RESPONSE=$(check_winter)
+# if [ "$(echo "$STABLE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
+if true; then
   STABLE_UPDATE=0
   STABLE_BUILD=$WINTERCMS_BUILD
   STABLE_CORE_HASH=$WINTERCMS_CORE_HASH
@@ -283,8 +286,9 @@ else
 fi
 
 echo " - Querying Winter CMS API for EDGE updates..."
-EDGE_RESPONSE=$(check_winter edge)
-if [ "$(echo "$EDGE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
+# EDGE_RESPONSE=$(check_winter edge)
+# if [ "$(echo "$EDGE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
+if true; then
   EDGE_UPDATE=0
   EDGE_BUILD=$WINTERCMS_EDGE_BUILD
   EDGE_CORE_HASH=$WINTERCMS_EDGE_CORE_HASH
@@ -315,6 +319,7 @@ if [ "$GITHUB_LATEST_COMMIT" != "$WINTERCMS_DEVELOP_COMMIT" ]; then
   echo "    New DEVELOP commit";
   echo "     SHA: $GITHUB_LATEST_COMMIT"
   echo " - Generating develop checksum..."
+  # GITHUB_LATEST_CHECKSUM=$WINTERCMS_DEVELOP_CHECKSUM
   GITHUB_LATEST_CHECKSUM=$(update_checksum $GITHUB_LATEST_COMMIT)
 else
   DEVELOP_UPDATE=0
