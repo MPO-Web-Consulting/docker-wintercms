@@ -56,7 +56,6 @@ RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG . && \
   touch storage/database.sqlite && \
   chmod 666 storage/database.sqlite && \
   php artisan winter:up && \
-  php artisan plugin:install winter.drivers && \
   chown -R www-data:www-data /var/www/html && \
   find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
 
