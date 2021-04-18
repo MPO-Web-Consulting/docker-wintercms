@@ -10,51 +10,27 @@ env:
       BRANCH=stable
     - VARIANT=php7.4/fpm
       BRANCH=stable
-    - VARIANT=php7.3/apache
-      BRANCH=stable
-    - VARIANT=php7.3/fpm
-      BRANCH=stable
     - VARIANT=php7.2/apache
       BRANCH=stable
     - VARIANT=php7.2/fpm
-      BRANCH=stable
-    - VARIANT=php7.1/apache
-      BRANCH=stable
-    - VARIANT=php7.1/fpm
       BRANCH=stable
 
     - VARIANT=php7.4/apache
       BRANCH=edge
     - VARIANT=php7.4/fpm
       BRANCH=edge
-    - VARIANT=php7.3/apache
-      BRANCH=edge
-    - VARIANT=php7.3/fpm
-      BRANCH=edge
     - VARIANT=php7.2/apache
       BRANCH=edge
     - VARIANT=php7.2/fpm
-      BRANCH=edge
-    - VARIANT=php7.1/apache
-      BRANCH=edge
-    - VARIANT=php7.1/fpm
       BRANCH=edge
 
     - VARIANT=php7.4/apache
       BRANCH=develop
     - VARIANT=php7.4/fpm
       BRANCH=develop
-    - VARIANT=php7.3/apache
-      BRANCH=develop
-    - VARIANT=php7.3/fpm
-      BRANCH=develop
     - VARIANT=php7.2/apache
       BRANCH=develop
     - VARIANT=php7.2/fpm
-      BRANCH=develop
-    - VARIANT=php7.1/apache
-      BRANCH=develop
-    - VARIANT=php7.1/fpm
       BRANCH=develop
 
 install:
@@ -63,16 +39,16 @@ install:
 before_script:
   - docker -v
   - source version
-  - IMAGE='aspendigital/octobercms';
+  - IMAGE='hiltonbanes/wintercms';
     SLASH='/';
     if [ "$BRANCH" == "stable" ]; then
       DOCKERFILE="Dockerfile";
-      BUILD="build.$OCTOBERCMS_BUILD";
+      BUILD="build.$WINTERCMS_BUILD";
       TAG="${VARIANT//$SLASH/-}";
       TAG_LONG="$BUILD-$TAG";
     elif [ "$BRANCH" == "edge" ]; then
       DOCKERFILE="Dockerfile.edge";
-      BUILD="edge-build.$OCTOBERCMS_EDGE_BUILD";
+      BUILD="edge-build.$WINTERCMS_EDGE_BUILD";
       TAG="edge-${VARIANT//$SLASH/-}";
       TAG_LONG="$BUILD-${VARIANT//$SLASH/-}";
     elif [ "$BRANCH" == "develop" ]; then
@@ -88,7 +64,7 @@ script:
   - ~/official-images/test/run.sh "$IMAGE:$TAG"
   - docker run --rm "$IMAGE:$TAG" php --version
   - docker run --rm "$IMAGE:$TAG" composer --version
-  - docker run --rm "$IMAGE:$TAG" composer info | grep october
+  - docker run --rm "$IMAGE:$TAG" composer info | grep winter
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then

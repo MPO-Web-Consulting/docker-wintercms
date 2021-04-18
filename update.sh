@@ -11,21 +11,21 @@ if ! hash sha1sum 2>&-; then { if ! hash openssl 2>&-; then echo "Error: openssl
 ##############
 ### Functions
 
-function check_october {
+function check_winter {
   [ "$1" = "edge" ] && EDGE=1 || EDGE=0
 
-  # Host server PHP version - https://github.com/octobercms/october/blob/97b0bc481f948045f96a420bb54ab48628bfdddc/modules/system/classes/UpdateManager.php#L835
-  OCTOBERCMS_SERVER_HASH=YToyOntzOjM6InBocCI7czo2OiI3LjAuMTMiO3M6MzoidXJsIjtzOjE2OiJodHRwOi8vbG9jYWxob3N0Ijt9
+  # Host server PHP version - https://github.com/wintercms/winter/blob/97b0bc481f948045f96a420bb54ab48628bfdddc/modules/system/classes/UpdateManager.php#L835
+  WINTERCMS_SERVER_HASH=YToyOntzOjM6InBocCI7czo2OiI3LjAuMTMiO3M6MzoidXJsIjtzOjE2OiJodHRwOi8vbG9jYWxob3N0Ijt9
 
   # Set default NULL HASH if core hash isn't set
-  [ -z "$OCTOBERCMS_CORE_HASH" ] && OCTOBERCMS_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
-  [ -z "$OCTOBERCMS_EDGE_CORE_HASH" ] && OCTOBERCMS_EDGE_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
+  [ -z "$WINTERCMS_CORE_HASH" ] && WINTERCMS_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
+  [ -z "$WINTERCMS_EDGE_CORE_HASH" ] && WINTERCMS_EDGE_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
 
-  [ "$EDGE" -eq 1 ] && CORE_HASH="$OCTOBERCMS_EDGE_CORE_HASH" || CORE_HASH="$OCTOBERCMS_CORE_HASH";
-  [ "$EDGE" -eq 1 ] && CORE_BUILD="$OCTOBERCMS_EDGE_BUILD" || CORE_BUILD="$OCTOBERCMS_BUILD";
+  [ "$EDGE" -eq 1 ] && CORE_HASH="$WINTERCMS_EDGE_CORE_HASH" || CORE_HASH="$WINTERCMS_CORE_HASH";
+  [ "$EDGE" -eq 1 ] && CORE_BUILD="$WINTERCMS_EDGE_BUILD" || CORE_BUILD="$WINTERCMS_BUILD";
 
-  curl -X POST -fsS --connect-timeout 15 --url http://gateway.octobercms.com/api/core/update \
-   -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$OCTOBERCMS_SERVER_HASH" -F "edge=$EDGE" \
+  curl -X POST -fsS --connect-timeout 15 --url http://gateway.wintercms.com/api/core/update \
+   -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$WINTERCMS_SERVER_HASH" -F "edge=$EDGE" \
     | jq '. | { build: .core.build, hash: .core.hash, update: .update, updates: .core.updates }' || exit 1
 }
 
@@ -36,8 +36,8 @@ function update_checksum {
     local SLUG=$1;
   fi
 
-  local ARCHIVE="octobercms-$SLUG.tar.gz"
-  curl -o $ARCHIVE -fS#L --connect-timeout 15 https://codeload.github.com/octobercms/october/tar.gz/$SLUG || exit 1;
+  local ARCHIVE="wintercms-$SLUG.tar.gz"
+  curl -o $ARCHIVE -fS#L --connect-timeout 15 https://codeload.github.com/wintercms/winter/tar.gz/$SLUG || exit 1;
   if hash sha1sum 2>&-; then
     sha1sum $ARCHIVE | awk '{print $1}'
   elif hash openssl 2>&-; then
@@ -88,12 +88,12 @@ function update_dockerfiles {
 
       sed \
         -e '/^#.*$/d' -e '/^  #.*$/d' \
-        -e 's!%%OCTOBERCMS_TAG%%!'"$current_tag"'!g' \
-        -e 's!%%OCTOBERCMS_CHECKSUM%%!'"$checksum"'!g' \
-        -e 's!%%OCTOBERCMS_CORE_HASH%%!'"$hash"'!g' \
-        -e 's!%%OCTOBERCMS_CORE_BUILD%%!'"$build"'!g' \
-        -e 's!%%OCTOBERCMS_DEVELOP_COMMIT%%!'"$GITHUB_LATEST_COMMIT"'!g' \
-        -e 's!%%OCTOBERCMS_DEVELOP_CHECKSUM%%!'"$GITHUB_LATEST_CHECKSUM"'!g' \
+        -e 's!%%WINTERCMS_TAG%%!'"$current_tag"'!g' \
+        -e 's!%%WINTERCMS_CHECKSUM%%!'"$checksum"'!g' \
+        -e 's!%%WINTERCMS_CORE_HASH%%!'"$hash"'!g' \
+        -e 's!%%WINTERCMS_CORE_BUILD%%!'"$build"'!g' \
+        -e 's!%%WINTERCMS_DEVELOP_COMMIT%%!'"$GITHUB_LATEST_COMMIT"'!g' \
+        -e 's!%%WINTERCMS_DEVELOP_CHECKSUM%%!'"$GITHUB_LATEST_CHECKSUM"'!g' \
         -e 's!%%PHP_VERSION%%!'"$phpVersion"'!g' \
         -e 's!%%PHP_GD_CONFIG%%!'"$gd_config"'!g' \
         -e 's!%%PHP_ZIP_CONFIG%%!'"$zip_config"'!g' \
@@ -118,7 +118,7 @@ function copy_entrypoint_config {
     for variant in apache fpm; do
       dir="$phpVersionDir/$variant"
       mkdir -p "$dir"
-      cp -a docker-oc-entrypoint "$dir/docker-oc-entrypoint"
+      cp -a docker-wn-entrypoint "$dir/docker-wn-entrypoint"
       cp -a config "$dir/."
     done
   done
@@ -147,7 +147,7 @@ function update_buildtags {
       dir="$phpVersion/$variant"
       [ -f "$dir/Dockerfile" ] || continue
 
-      fullVersion="$(cat "$dir/Dockerfile" | awk '$1 == "ENV" && $2 == "OCTOBERCMS_CORE_BUILD" { print $3; exit }')"
+      fullVersion="$(cat "$dir/Dockerfile" | awk '$1 == "ENV" && $2 == "WINTERCMS_CORE_BUILD" { print $3; exit }')"
       fullVersion=build.$fullVersion
 
       versionAliases=()
@@ -164,11 +164,11 @@ function update_buildtags {
         fi
       fi
 
-      tagsMarkdown+="- $(join ', ' "${fullAliases[@]}"): [$dir/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/$dir/Dockerfile)\n"
+      tagsMarkdown+="- $(join ', ' "${fullAliases[@]}"): [$dir/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/$dir/Dockerfile)\n"
 
       # Build edge tags
       [ -f "$dir/Dockerfile.edge" ] || continue
-      edgeVersion="$(cat "$dir/Dockerfile.edge" | awk '$1 == "ENV" && $2 == "OCTOBERCMS_CORE_BUILD" { print $3; exit }')"
+      edgeVersion="$(cat "$dir/Dockerfile.edge" | awk '$1 == "ENV" && $2 == "WINTERCMS_CORE_BUILD" { print $3; exit }')"
       edgeVersion=edge-build.$edgeVersion
 
       edgeAliases=()
@@ -184,7 +184,7 @@ function update_buildtags {
           fullEdgeAliases+=( "${edgeAliases[@]}" )
         fi
       fi
-      edgeTagsMarkdown+="- $(join ', ' "${fullEdgeAliases[@]}"): [$dir/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/$dir/Dockerfile.edge)\n"
+      edgeTagsMarkdown+="- $(join ', ' "${fullEdgeAliases[@]}"): [$dir/Dockerfile.edge](https://github.com/mik-p/docker-wintercms/blob/master/$dir/Dockerfile.edge)\n"
 
       # Build develop tags
       [ -f "$dir/Dockerfile.develop" ] || continue
@@ -201,7 +201,7 @@ function update_buildtags {
           fullDevelopAliases+=( "${developAliases[@]}" )
         fi
       fi
-      developTagsMarkdown+="- $(join ', ' "${fullDevelopAliases[@]}"): [$dir/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/$dir/Dockerfile.develop)\n"
+      developTagsMarkdown+="- $(join ', ' "${fullDevelopAliases[@]}"): [$dir/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/$dir/Dockerfile.develop)\n"
 
     done
   done
@@ -262,19 +262,19 @@ echo "Automat: `date`"
 [ "$FORCE" ] && echo ' - Force update' || source version
 [ "$REWRITE_ONLY" ] && echo ' - Rewriting Dockerfiles and README'
 
-echo " - Querying October CMS API for updates..."
-STABLE_RESPONSE=$(check_october)
+echo " - Querying Winter CMS API for updates..."
+STABLE_RESPONSE=$(check_winter)
 if [ "$(echo "$STABLE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
   STABLE_UPDATE=0
-  STABLE_BUILD=$OCTOBERCMS_BUILD
-  STABLE_CORE_HASH=$OCTOBERCMS_CORE_HASH
-  STABLE_CHECKSUM=$OCTOBERCMS_CHECKSUM
-  echo "    No STABLE build updates ($OCTOBERCMS_BUILD)";
+  STABLE_BUILD=$WINTERCMS_BUILD
+  STABLE_CORE_HASH=$WINTERCMS_CORE_HASH
+  STABLE_CHECKSUM=$WINTERCMS_CHECKSUM
+  echo "    No STABLE build updates ($WINTERCMS_BUILD)";
 else
   STABLE_UPDATE=1
   STABLE_BUILD=$(echo "$STABLE_RESPONSE" | jq -r '.build')
   STABLE_CORE_HASH=$(echo "$STABLE_RESPONSE" | jq -r '.hash')
-  echo "    New STABLE build ($OCTOBERCMS_BUILD -> $STABLE_BUILD)";
+  echo "    New STABLE build ($WINTERCMS_BUILD -> $STABLE_BUILD)";
   echo "     STABLE Build: $STABLE_BUILD"
   echo "     STABLE core hash: $STABLE_CORE_HASH"
   echo " - Generating new checksum..."
@@ -282,19 +282,19 @@ else
   echo "     GitHub Tag v1.0.$STABLE_BUILD | $STABLE_CHECKSUM"
 fi
 
-echo " - Querying October CMS API for EDGE updates..."
-EDGE_RESPONSE=$(check_october edge)
+echo " - Querying Winter CMS API for EDGE updates..."
+EDGE_RESPONSE=$(check_winter edge)
 if [ "$(echo "$EDGE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
   EDGE_UPDATE=0
-  EDGE_BUILD=$OCTOBERCMS_EDGE_BUILD
-  EDGE_CORE_HASH=$OCTOBERCMS_EDGE_CORE_HASH
-  EDGE_CHECKSUM=$OCTOBERCMS_EDGE_CHECKSUM
-  echo "    No EDGE build updates ($OCTOBERCMS_EDGE_BUILD)";
+  EDGE_BUILD=$WINTERCMS_EDGE_BUILD
+  EDGE_CORE_HASH=$WINTERCMS_EDGE_CORE_HASH
+  EDGE_CHECKSUM=$WINTERCMS_EDGE_CHECKSUM
+  echo "    No EDGE build updates ($WINTERCMS_EDGE_BUILD)";
 else
   EDGE_UPDATE=1
   EDGE_BUILD=$(echo "$EDGE_RESPONSE" | jq -r '.build')
   EDGE_CORE_HASH=$(echo "$EDGE_RESPONSE" | jq -r '.hash')
-  echo "    New EDGE build ($OCTOBERCMS_EDGE_BUILD -> $EDGE_BUILD)";
+  echo "    New EDGE build ($WINTERCMS_EDGE_BUILD -> $EDGE_BUILD)";
   echo "     EDGE Build: $EDGE_BUILD"
   echo "     EDGE core hash: $EDGE_CORE_HASH"
   echo " - Generating new checksum..."
@@ -303,14 +303,14 @@ else
 fi
 
 echo " - Fetching GitHub repository for latest tag..."
-GITHUB_LATEST_TAG=$( curl -fsS --connect-timeout 15 https://api.github.com/repos/octobercms/october/tags | jq -r '.[0] | .name') || exit 1;
+GITHUB_LATEST_TAG=$( curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/tags | jq -r '.[0] | .name') || exit 1;
 [ -z "$GITHUB_LATEST_TAG" ] && exit 1 || echo "    Latest repo tag: $GITHUB_LATEST_TAG";
 
 echo " - Fetching latest commit on develop branch..."
-GITHUB_LATEST_COMMIT=$( curl -fsS --connect-timeout 15 https://api.github.com/repos/octobercms/october/commits/develop | jq -r '.sha') || exit 1;
+GITHUB_LATEST_COMMIT=$( curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/commits/develop | jq -r '.sha') || exit 1;
 [ -z "$GITHUB_LATEST_COMMIT" ] && exit 1 || echo "    Latest commit hash: $GITHUB_LATEST_COMMIT";
 
-if [ "$GITHUB_LATEST_COMMIT" != "$OCTOBERCMS_DEVELOP_COMMIT" ]; then
+if [ "$GITHUB_LATEST_COMMIT" != "$WINTERCMS_DEVELOP_COMMIT" ]; then
   DEVELOP_UPDATE=1
   echo "    New DEVELOP commit";
   echo "     SHA: $GITHUB_LATEST_COMMIT"
@@ -318,7 +318,7 @@ if [ "$GITHUB_LATEST_COMMIT" != "$OCTOBERCMS_DEVELOP_COMMIT" ]; then
   GITHUB_LATEST_CHECKSUM=$(update_checksum $GITHUB_LATEST_COMMIT)
 else
   DEVELOP_UPDATE=0
-  GITHUB_LATEST_CHECKSUM=$OCTOBERCMS_DEVELOP_CHECKSUM
+  GITHUB_LATEST_CHECKSUM=$WINTERCMS_DEVELOP_CHECKSUM
 fi
 
 echo " - Copying entrypoint and config..."
@@ -326,14 +326,14 @@ copy_entrypoint_config
 
 if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$EDGE_UPDATE" -eq 1 ] || [ "$DEVELOP_UPDATE" -eq 1 ]; then
   echo " - Setting build values..."
-  echo "    OCTOBERCMS_BUILD: $STABLE_BUILD" && echo "OCTOBERCMS_BUILD=$STABLE_BUILD" > version
-  echo "    OCTOBERCMS_CORE_HASH: $STABLE_CORE_HASH" && echo "OCTOBERCMS_CORE_HASH=$STABLE_CORE_HASH" >> version
-  echo "    OCTOBERCMS_CHECKSUM: $STABLE_CHECKSUM" && echo "OCTOBERCMS_CHECKSUM=$STABLE_CHECKSUM" >> version
-  echo "    OCTOBERCMS_EDGE_BUILD: $EDGE_BUILD" && echo "OCTOBERCMS_EDGE_BUILD=$EDGE_BUILD" >> version
-  echo "    OCTOBERCMS_EDGE_CORE_HASH: $EDGE_CORE_HASH" && echo "OCTOBERCMS_EDGE_CORE_HASH=$EDGE_CORE_HASH" >> version
-  echo "    OCTOBERCMS_EDGE_CHECKSUM: $EDGE_CHECKSUM" && echo "OCTOBERCMS_EDGE_CHECKSUM=$EDGE_CHECKSUM" >> version
-  echo "    OCTOBERCMS_DEVELOP_COMMIT: $GITHUB_LATEST_COMMIT" && echo "OCTOBERCMS_DEVELOP_COMMIT=$GITHUB_LATEST_COMMIT" >> version
-  echo "    OCTOBERCMS_DEVELOP_CHECKSUM: $GITHUB_LATEST_CHECKSUM" && echo "OCTOBERCMS_DEVELOP_CHECKSUM=$GITHUB_LATEST_CHECKSUM" >> version
+  echo "    WINTERCMS_BUILD: $STABLE_BUILD" && echo "WINTERCMS_BUILD=$STABLE_BUILD" > version
+  echo "    WINTERCMS_CORE_HASH: $STABLE_CORE_HASH" && echo "WINTERCMS_CORE_HASH=$STABLE_CORE_HASH" >> version
+  echo "    WINTERCMS_CHECKSUM: $STABLE_CHECKSUM" && echo "WINTERCMS_CHECKSUM=$STABLE_CHECKSUM" >> version
+  echo "    WINTERCMS_EDGE_BUILD: $EDGE_BUILD" && echo "WINTERCMS_EDGE_BUILD=$EDGE_BUILD" >> version
+  echo "    WINTERCMS_EDGE_CORE_HASH: $EDGE_CORE_HASH" && echo "WINTERCMS_EDGE_CORE_HASH=$EDGE_CORE_HASH" >> version
+  echo "    WINTERCMS_EDGE_CHECKSUM: $EDGE_CHECKSUM" && echo "WINTERCMS_EDGE_CHECKSUM=$EDGE_CHECKSUM" >> version
+  echo "    WINTERCMS_DEVELOP_COMMIT: $GITHUB_LATEST_COMMIT" && echo "WINTERCMS_DEVELOP_COMMIT=$GITHUB_LATEST_COMMIT" >> version
+  echo "    WINTERCMS_DEVELOP_CHECKSUM: $GITHUB_LATEST_CHECKSUM" && echo "WINTERCMS_DEVELOP_CHECKSUM=$GITHUB_LATEST_CHECKSUM" >> version
   update_dockerfiles && update_dockerfiles edge && update_dockerfiles develop
   update_buildtags
   [ "$PUSH" ] && update_repo || echo ' - No changes committed.'
@@ -341,7 +341,7 @@ if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$EDGE_UPDATE" -
   if [ "$SLACK_WEBHOOK_URL" ]; then
     echo -n " - Posting update to Slack..."
     curl -X POST -fsS --connect-timeout 15 --data-urlencode "payload={
-      'text': 'October CMS Build $STABLE_BUILD | Edge Build $EDGE_BUILD | Develop $GITHUB_LATEST_COMMIT',
+      'text': 'Winter CMS Build $STABLE_BUILD | Edge Build $EDGE_BUILD | Develop $GITHUB_LATEST_COMMIT',
     }" $SLACK_WEBHOOK_URL
     echo -e ""
   fi

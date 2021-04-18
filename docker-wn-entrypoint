@@ -4,27 +4,27 @@ set -e
 # PHP config
 if [ ! -z "$PHP_DISPLAY_ERRORS" ]; then
   echo "php.ini set display_errors=$PHP_DISPLAY_ERRORS"
-  sed -i "/display_errors=*/c\display_errors=$PHP_DISPLAY_ERRORS" /usr/local/etc/php/conf.d/docker-oc-php.ini
+  sed -i "/display_errors=*/c\display_errors=$PHP_DISPLAY_ERRORS" /usr/local/etc/php/conf.d/docker-wn-php.ini
 fi
 
 if [ ! -z "$PHP_POST_MAX_SIZE" ]; then
   echo "php.ini set post_max_size=$PHP_POST_MAX_SIZE"
-  sed -i "/post_max_size=*/c\post_max_size=$PHP_POST_MAX_SIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
+  sed -i "/post_max_size=*/c\post_max_size=$PHP_POST_MAX_SIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
 fi
 
 if [ ! -z "$PHP_MEMORY_LIMIT" ]; then
   echo "php.ini set memory_limit=$PHP_MEMORY_LIMIT"
-  sed -i "/memory_limit=*/c\memory_limit=$PHP_MEMORY_LIMIT" /usr/local/etc/php/conf.d/docker-oc-php.ini
+  sed -i "/memory_limit=*/c\memory_limit=$PHP_MEMORY_LIMIT" /usr/local/etc/php/conf.d/docker-wn-php.ini
 fi
 
 if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   echo "php.ini set upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE"
-  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
+  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
 fi
 
 if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   echo "php.ini set upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE"
-  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
+  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
 fi
 
 # Xdebug config
@@ -46,13 +46,13 @@ fi
 
 # Display current commit, php version, and dependency info
 if [ "${VERSION_INFO,,}" == "true" ]; then
-  echo -e "October CMS - $OCTOBERCMS_TAG\n---"
+  echo -e "Winter CMS - $WINTERCMS_TAG\n---"
   if [ -d ".git" ]; then
     git log --pretty=format:"%s%n%C(yellow)%H%Creset" -1
     echo -e "\n---"
   fi
   php --version | grep PHP -m 1
-  composer info | grep october | awk '{print $1 ": " $2}'
+  composer info | grep winter | awk '{print $1 ": " $2}'
   echo "---"
 fi
 
@@ -75,7 +75,7 @@ if [ ! -z "$GIT_MERGE_PR" ]; then
 
   echo "Test GitHub pull request #$GIT_MERGE_PR";
   curl -fsS --connect-timeout 15 \
-    https://api.github.com/repos/octobercms/october/pulls/$GIT_MERGE_PR \
+    https://api.github.com/repos/wintercms/winter/pulls/$GIT_MERGE_PR \
     | jq -r '.title, .html_url';
   echo "---"
 
@@ -93,8 +93,8 @@ fi
 # Enable remote IP forwarding for proxy support
 if [[ "$1" == apache2* ]] && [ "${FWD_REMOTE_IP,,}" == "true" ]; then
   a2enmod remoteip -q
-  echo 'RemoteIPHeader X-Forwarded-For' > $APACHE_CONFDIR/conf-available/docker-oc-apache.conf
-  a2enconf docker-oc-apache -q
+  echo 'RemoteIPHeader X-Forwarded-For' > $APACHE_CONFDIR/conf-available/docker-wn-apache.conf
+  a2enconf docker-wn-apache -q
 fi
 
 # Start a cron process within the container
@@ -120,15 +120,15 @@ if [ "${INIT_PLUGINS,,}" == "true" ] || [ "${INIT_PLUGINS,,}" == "force" ]; then
   done
 fi
 
-# Run october up on container start
-if [ "${INIT_OCTOBER,,}" == "true" ]; then
-  echo 'Initializing October CMS...'
-  php artisan october:up
+# Run winter up on container start
+if [ "${INIT_WINTER,,}" == "true" ]; then
+  echo 'Initializing Winter CMS...'
+  php artisan winter:up
 fi
 
-# Runs all October CMS unit tests. Pass test filename to run a specific test.
+# Runs all Winter CMS unit tests. Pass test filename to run a specific test.
 if [ ! -z "$UNIT_TEST" ]; then
-  echo -e "October CMS Unit Test..."
+  echo -e "Winter CMS Unit Test..."
   if [ "${UNIT_TEST,,}" == "true" ]; then
     vendor/bin/phpunit
   elif [ ! -f "$UNIT_TEST" ]; then

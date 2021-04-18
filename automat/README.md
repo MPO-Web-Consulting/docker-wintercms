@@ -2,9 +2,9 @@
 
 __Self contained automated update management.__
 
-This cron container automatically clones this repository and runs [update.sh](https://github.com/aspendigital/docker-octobercms/blob/master/update.sh). It is intended to run indefinitely in detached mode to poll the [October CMS](https://octobercms.com/) API for updates.
+This cron container automatically clones this repository and runs [update.sh](https://github.com/mik-p/docker-wintercms/blob/master/update.sh). It is intended to run indefinitely in detached mode to poll the [Winter CMS](https://wintercms.com/) API for updates.
 
-When an update is found, the changed __version__ and __Dockerfiles__ are pushed back to the origin repository. The commit triggers an automated build process for the  [Docker Hub image aspendigital/octobercms](https://hub.docker.com/r/aspendigital/octobercms/).
+When an update is found, the changed __version__ and __Dockerfiles__ are pushed back to the origin repository. The commit triggers an automated build process for the  [Docker Hub image hiltonbanes/wintercms](https://hub.docker.com/r/hiltonbanes/wintercms/).
 
 
 ## Getting Started
@@ -13,7 +13,7 @@ Build the automat image
 
 ```shell
 $ cd automat
-$ docker build -t docker-octobercms-automat .
+$ docker build -t docker-wintercms-automat .
 ```
 
 Run the container (detached mode)
@@ -23,20 +23,20 @@ Run the container (detached mode)
 
 ```shell
 $ docker run \
-  --name docker-octobercms-automat \
+  --name docker-wintercms-automat \
   -d --restart always \
-  -e TZ="America/Denver" \
+  -e TZ="Australia/Sydney" \
   -e GIT_USER_EMAIL="automat@domain.tld" \
   -e GIT_USER_NAME="Automat" \
   -e GIT_REPO_KEY="$(cat automat.id_rsa)" \
   -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX" \
-  docker-octobercms-automat
+  docker-wintercms-automat
 ```
 
 The script will output process information to the container logs which can be review by running:
 
 ```shell
-$ docker logs -f docker-octobercms-automat
+$ docker logs -f docker-wintercms-automat
 ```
 
 If you've passed along a Slack webhook, you'll get pinged when a stable update has been pushed.

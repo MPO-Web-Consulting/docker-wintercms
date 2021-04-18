@@ -1,7 +1,7 @@
 <?php
 /*
 | For additional options see
-| https://github.com/octobercms/october/blob/master/config/database.php
+| https://github.com/wintercms/winter/blob/master/config/database.php
 |
 | When using a container to serve a database, the host value will need to be
 |  set as the service name defined in your docker-compose.yml

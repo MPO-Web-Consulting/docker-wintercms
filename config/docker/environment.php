@@ -1,7 +1,7 @@
 <?php
 /*
 | For additional options see
-| https://github.com/octobercms/october/blob/develop/config/environment.php
+| https://github.com/wintercms/winter/blob/develop/config/environment.php
 */
 
 return [

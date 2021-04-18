@@ -1,7 +1,7 @@
 <?php
 /*
 | For additional options see
-| https://github.com/octobercms/october/blob/master/config/cache.php
+| https://github.com/wintercms/winter/blob/master/config/cache.php
 */
 
 return [

@@ -1,101 +1,76 @@
-# Docker + October CMS
+![Winter](./wintercms.svg)
 
-[![Build Status](https://travis-ci.org/aspendigital/docker-octobercms.svg?branch=master)](https://travis-ci.org/aspendigital/docker-octobercms) [![Docker Hub Pulls](https://img.shields.io/docker/pulls/aspendigital/octobercms.svg)](https://hub.docker.com/r/aspendigital/octobercms/) [![October CMS Build 472](https://img.shields.io/badge/October%20CMS%20Build-472-red.svg)](https://github.com/octobercms/october) [![Edge Build 472](https://img.shields.io/badge/Edge%20Build-472-lightgrey.svg)](https://github.com/octobercms/october)
+# Docker + Winter CMS
 
-The docker images defined in this repository serve as a starting point for [October CMS](https://octobercms.com) projects.
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build 472](https://img.shields.io/badge/Winter%20CMS%20Build-472-red.svg)](https://github.com/wintercms/winter)
 
-Based on [official docker PHP images](https://hub.docker.com/_/php), images include dependencies required by October, Composer and install the [latest release](https://octobercms.com/changelog).
+The docker images defined in this repository serve as a starting point for [Winter CMS](https://wintercms.com) projects.
 
-- [Supported Tags](https://github.com/aspendigital/docker-octobercms#supported-tags)
-- [Quick Start](https://github.com/aspendigital/docker-octobercms#quick-start)
-- [Working with Local Files](https://github.com/aspendigital/docker-octobercms#working-with-local-files)
-- [Database Support](https://github.com/aspendigital/docker-octobercms#database-support)
-- [Cron](https://github.com/aspendigital/docker-octobercms#cron)
-- [Command Line Tasks](https://github.com/aspendigital/docker-octobercms#command-line-tasks)
-- [App Environment](https://github.com/aspendigital/docker-octobercms#app-environment)
+Based on [official docker PHP images](https://hub.docker.com/_/php), images include dependencies required by Winter, Composer and install the [latest release](https://wintercms.com/changelog).
+
+- [Supported Tags](#supported-tags)
+- [Quick Start](#quick-start)
+- [Working with Local Files](#working-with-local-files)
+- [Database Support](#database-support)
+- [Cron](#cron)
+- [Command Line Tasks](#command-line-tasks)
+- [App Environment](#app-environment)
 
 ---
 
 ## Supported Tags
 
-- `build.472-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/apache/Dockerfile)
-- `build.472-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/fpm/Dockerfile)
-- `build.472-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/apache/Dockerfile)
-- `build.472-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/fpm/Dockerfile)
-- `build.472-php7.2-apache`, `php7.2-apache`, `build.472`, `latest`: [php7.2/apache/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/apache/Dockerfile)
-- `build.472-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/fpm/Dockerfile)
-- `build.472-php7.1-apache`, `php7.1-apache`: [php7.1/apache/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/apache/Dockerfile)
-- `build.472-php7.1-fpm`, `php7.1-fpm`: [php7.1/fpm/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/fpm/Dockerfile)
+- `build.472-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](./php7.4/apache/Dockerfile)
+- `build.472-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](./php7.4/fpm/Dockerfile)
+- `build.472-php7.2-apache`, `php7.2-apache`, `build.472`, `latest`: [php7.2/apache/Dockerfile](./php7.2/apache/Dockerfile)
+- `build.472-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](./php7.2/fpm/Dockerfile)
 
 
 ### Edge Tags
 
-- `edge-build.472-php7.4-apache`, `edge-php7.4-apache`: [php7.4/apache/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/apache/Dockerfile.edge)
-- `edge-build.472-php7.4-fpm`, `edge-php7.4-fpm`: [php7.4/fpm/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/fpm/Dockerfile.edge)
-- `edge-build.472-php7.3-apache`, `edge-php7.3-apache`: [php7.3/apache/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/apache/Dockerfile.edge)
-- `edge-build.472-php7.3-fpm`, `edge-php7.3-fpm`: [php7.3/fpm/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/fpm/Dockerfile.edge)
-- `edge-build.472-php7.2-apache`, `edge-php7.2-apache`, `edge-build.472`, `edge`: [php7.2/apache/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/apache/Dockerfile.edge)
-- `edge-build.472-php7.2-fpm`, `edge-php7.2-fpm`: [php7.2/fpm/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/fpm/Dockerfile.edge)
-- `edge-build.472-php7.1-apache`, `edge-php7.1-apache`: [php7.1/apache/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/apache/Dockerfile.edge)
-- `edge-build.472-php7.1-fpm`, `edge-php7.1-fpm`: [php7.1/fpm/Dockerfile.edge](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/fpm/Dockerfile.edge)
+- `edge-build.472-php7.4-apache`, `edge-php7.4-apache`: [php7.4/apache/Dockerfile.edge](./php7.4/apache/Dockerfile.edge)
+- `edge-build.472-php7.4-fpm`, `edge-php7.4-fpm`: [php7.4/fpm/Dockerfile.edge](./php7.4/fpm/Dockerfile.edge)
+- `edge-build.472-php7.2-apache`, `edge-php7.2-apache`, `edge-build.472`, `edge`: [php7.2/apache/Dockerfile.edge](./php7.2/apache/Dockerfile.edge)
+- `edge-build.472-php7.2-fpm`, `edge-php7.2-fpm`: [php7.2/fpm/Dockerfile.edge](./php7.2/fpm/Dockerfile.edge)
 
 
 ### Develop Tags
 
-- `develop-php7.4-apache`: [php7.4/apache/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/apache/Dockerfile.develop)
-- `develop-php7.4-fpm`: [php7.4/fpm/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.4/fpm/Dockerfile.develop)
-- `develop-php7.3-apache`: [php7.3/apache/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/apache/Dockerfile.develop)
-- `develop-php7.3-fpm`: [php7.3/fpm/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.3/fpm/Dockerfile.develop)
-- `develop-php7.2-apache`, `develop`: [php7.2/apache/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/apache/Dockerfile.develop)
-- `develop-php7.2-fpm`: [php7.2/fpm/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.2/fpm/Dockerfile.develop)
-- `develop-php7.1-apache`: [php7.1/apache/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/apache/Dockerfile.develop)
-- `develop-php7.1-fpm`: [php7.1/fpm/Dockerfile.develop](https://github.com/aspendigital/docker-octobercms/blob/master/php7.1/fpm/Dockerfile.develop)
-
-### Legacy Tags
-
-> October CMS build 420+ requires PHP version 7.0 or higher
-
-- `build.419-php5.6-apache`, `php5.6-apache`: [php5.6/apache/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php5.6/apache/Dockerfile)
-- `build.419-php5.6-fpm`, `php5.6-fpm`: [php5.6/fpm/Dockerfile](https://github.com/aspendigital/docker-octobercms/blob/master/php5.6/fpm/Dockerfile)
+- `develop-php7.4-apache`: [php7.4/apache/Dockerfile.develop](./php7.4/apache/Dockerfile.develop)
+- `develop-php7.4-fpm`: [php7.4/fpm/Dockerfile.develop](./php7.4/fpm/Dockerfile.develop)
+- `develop-php7.2-apache`, `develop`: [php7.2/apache/Dockerfile.develop](./php7.2/apache/Dockerfile.develop)
+- `develop-php7.2-fpm`: [php7.2/fpm/Dockerfile.develop](./php7.2/fpm/Dockerfile.develop)
 
 
 ## Quick Start
 
-To run October CMS using Docker, start a container using the latest image, mapping your local port 80 to the container's port 80:
+To run Winter CMS using Docker, start a container using the latest image, mapping your local port 80 to the container's port 80:
 
 ```shell
-$ docker run -p 80:80 --name october aspendigital/octobercms:latest
+$ docker run -p 8080:80 --name winter hiltonbanes/wintercms:latest
 # `CTRL-C` to stop
-$ docker rm october  # Destroys the container
+$ docker rm winter  # Destroys the container
 ```
 
-> If there is a port conflict, you will receive an error message from the Docker daemon. Try mapping to an open local port (-p 8080:80) or shut down the container or server that is on the desired port.
-
- - Visit [http://localhost](http://localhost) using your browser.
- - Login to the [backend](http://localhost/backend) with the username `admin` and password `admin`.
+ - Visit [http://localhost:8080](http://localhost:8080) using your browser.
+ - Login to the [backend](http://localhost:8080/backend) with the username `admin` and password `admin`.
  - Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
+ - Run the container in the background by passing the `-d` option:
 
-Run the container in the background by passing the `-d` option:
-
-```shell
-$ docker run -p 80:80 --name october -d aspendigital/octobercms:latest
-$ docker stop october  # Stops the container. To restart `docker start october`
-$ docker rm october  # Destroys the container
-```
 
 ## Working with Local Files
 
 Using Docker volumes, you can mount local files inside a container.
 
-The container uses the working directory `/var/www/html` for the web server document root. This is where the October CMS codebase resides in the container. You can replace files and folders, or introduce new ones with bind-mounted volumes:
+The container uses the working directory `/var/www/html` for the web server document root. This is where the Winter CMS codebase resides in the container. You can replace files and folders, or introduce new ones with bind-mounted volumes:
 
 ```shell
 # Developing a plugin
-$ git clone git@github.com:aspendigital/oc-resizer-plugin.git
-$ cd oc-resizer-plugin
-$ docker run -p 80:80 --rm \
-  -v $(pwd):/var/www/html/plugins/aspendigital/resizer \
-  aspendigital/octobercms:latest
+$ git clone git@github.com:wintercms/wn-user-plugin.git
+$ cd wn-user-plugin
+$ docker run -p 8080:80 --rm \
+  -v $(pwd):/var/www/html/plugins/winter/user \
+  hiltonbanes/wintercms:latest
 ```
 
 Save yourself some keyboards strokes, utilize [docker-compose](https://docs.docker.com/compose/overview/) by introducing a `docker-compose.yml` file to your project folder:
@@ -105,11 +80,11 @@ Save yourself some keyboards strokes, utilize [docker-compose](https://docs.dock
 version: '2.2'
 services:
   web:
-    image: aspendigital/octobercms
+    image: hiltonbanes/wintercms
     ports:
-      - 80:80
+      - 8080:80
     volumes:
-      - $PWD:/var/www/html/plugins/aspendigital/resizer
+      - $PWD:/var/www/html/plugins/winter/user
 ```
 With the above example saved in working directory, run:
 
@@ -123,7 +98,7 @@ $ docker-compose down # stop and destroy
 
 #### SQLite
 
-On build, an SQLite database is [created and initialized](https://github.com/aspendigital/docker-octobercms/blob/d3b288b9fe0606e32ac3d6466affd2996394bdca/Dockerfile.template#L54-L57) for the Docker image. With that database, users have immediate access to the backend for testing and developing themes and plugins. However, changes made to the built-in database will be lost once the container is stopped and removed.
+On build, an SQLite database is created and initialized for the Docker image. With that database, users have immediate access to the backend for testing and developing themes and plugins. However, changes made to the built-in database will be lost once the container is stopped and removed.
 
 When projects require a persistent SQLite database, copy or create a new database to the host which can be used as a bind mount:
 
@@ -132,12 +107,12 @@ When projects require a persistent SQLite database, copy or create a new databas
 $ touch storage/database.sqlite
 $ docker run --rm \
   -v $(pwd)/storage/database.sqlite:/var/www/html/storage/database.sqlite \
-  aspendigital/octobercms php artisan october:up
+  hiltonbanes/wintercms php artisan winter:up
 
 # Now run with the volume mounted to your host
-$ docker run -p 80:80 --name october \
+$ docker run -p 80:80 --name winter \
  -v $(pwd)/storage/database.sqlite:/var/www/html/storage/database.sqlite \
- aspendigital/octobercms
+ hiltonbanes/wintercms
 ```
 
 #### MySQL / Postgres
@@ -149,29 +124,29 @@ Alternatively, you can host the database using another container:
 version: '2.2'
 services:
   web:
-    image: aspendigital/octobercms:latest
+    image: hiltonbanes/wintercms:latest
     ports:
       - 80:80
     environment:
       - DB_TYPE=mysql
-      - DB_HOST=mysql #DB_HOST should match the service name of the database container
-      - DB_DATABASE=octobercms
+      - DB_HOST=mariadb #DB_HOST should match the service name of the database container
+      - DB_DATABASE=wintercms
       - DB_USERNAME=root
       - DB_PASSWORD=root
 
-  mysql:
-    image: mysql:5.7
+  mariadb:
+    image: mariadb:10.4
     ports:
       - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=octobercms
+      - MYSQL_DATABASE=wintercms
 ```
-Provision a new database with `october:up`:
+Provision a new database with `winter:up`:
 
 ```ssh
 $ docker-compose up -d
-$ docker-compose exec web php artisan october:up
+$ docker-compose exec web php artisan winter:up
 ```
 
 ## Cron
@@ -179,7 +154,7 @@ $ docker-compose exec web php artisan october:up
 You can start a cron process by setting the environment variable `ENABLE_CRON` to `true`:
 
 ```shell
-$ docker run -p 80:80 -e ENABLE_CRON=true aspendigital/octobercms:latest
+$ docker run -p 8080:80 -e ENABLE_CRON=true hiltonbanes/wintercms:latest
 ```
 
 Separate the cron process into it's own container:
@@ -189,11 +164,11 @@ Separate the cron process into it's own container:
 version: '2.2'
 services:
   web:
-    image: aspendigital/octobercms:latest
+    image: hiltonbanes/wintercms:latest
     init: true
     restart: always
     ports:
-      - 80:80
+      - 8080:80
     environment:
       - TZ=America/Denver
     volumes:
@@ -205,7 +180,7 @@ services:
       - ./themes:/var/www/html/themes
 
   cron:
-    image: aspendigital/octobercms:latest
+    image: hiltonbanes/wintercms:latest
     init: true
     restart: always
     command: [cron, -f]
@@ -221,7 +196,7 @@ Run the container in the background and launch an interactive shell (bash) for t
 
 
 ```shell
-$ docker run -p 80:80 --name containername -d aspendigital/octobercms:latest
+$ docker run -p 8080:80 --name containername -d hiltonbanes/wintercms:latest
 $ docker exec -it containername bash
 ```
 
@@ -238,11 +213,11 @@ $ docker exec containername composer info
 A few helper scripts have been added to the image:
 
 ```shell
-# `october` invokes `php artisan october:"$@"`
-$ docker exec containername october up
+# `winter` invokes `php artisan winter:"$@"`
+$ docker exec containername winter up
 
 # `artisan` invokes `php artisan "$@"`
-$ docker exec containername artisan plugin:install aspendigital.resizer
+$ docker exec containername artisan plugin:install winter.user
 
 # `tinker` invokes `php artisan tinker`. Requires `-it` for an interactive shell
 $ docker exec -it containername tinker
@@ -253,22 +228,22 @@ $ docker exec -it containername tinker
 
 By default, `APP_ENV` is set to `docker`.
 
-On image build, a default `.env` is [created](https://github.com/aspendigital/docker-octobercms/blob/d3b288b9fe0606e32ac3d6466affd2996394bdca/Dockerfile.template#L52) and [config files](https://github.com/aspendigital/docker-octobercms/tree/master/config/docker) for the `docker` app environment are copied to `/var/www/html/config/docker`. Environment variables can be used to override the included default settings via [`docker run`](https://docs.docker.com/engine/reference/run/#env-environment-variables) or [`docker-compose`](https://docs.docker.com/compose/environment-variables/).
+On image build, a default `.env` is created and [config files](./config/docker) for the `docker` app environment are copied to `/var/www/html/config/docker`. Environment variables can be used to override the included default settings via [`docker run`](https://docs.docker.com/engine/reference/run/#env-environment-variables) or [`docker-compose`](https://docs.docker.com/compose/environment-variables/).
 
-> __Note__: October CMS settings stored in a site's database override the config. Active theme, mail configuration, and other settings which are saved in the database will ultimately override configuration values.
+> __Note__: Winter CMS settings stored in a site's database override the config. Active theme, mail configuration, and other settings which are saved in the database will ultimately override configuration values.
 
 #### PHP configuration
 
-Recommended [settings for opcache and PHP are applied on image build](https://github.com/aspendigital/docker-octobercms/blob/f3c545fd84e293a67e63f86bf94f2bf2ab22ca15/Dockerfile.template#L9-L25).
+Recommended settings for opcache and PHP are applied on image build.
 
-Values set in `docker-oc-php.ini` can be overridden by passing one of the supported PHP environment variables defined below.
+Values set in `docker-wn-php.ini` can be overridden by passing one of the supported PHP environment variables defined below.
 
 To customize the PHP configuration further, add or replace `.ini` files found in `/usr/local/etc/php/conf.d/`.
 
 ### Environment Variables
 
 
-Environment variables can be passed to both docker-compose and October CMS.
+Environment variables can be passed to both docker-compose and Winter CMS.
 
  > Database credentials and other sensitive information should not be committed to the repository. Those required settings should be outlined in __.env.example__
 
@@ -277,7 +252,7 @@ Environment variables can be passed to both docker-compose and October CMS.
 
 #### Docker Entrypoint
 
-The following variables trigger actions run by the [entrypoint script](https://github.com/aspendigital/docker-octobercms/blob/master/docker-oc-entrypoint) at runtime.
+The following variables trigger actions run by the [entrypoint script](./docker-wn-entrypoint) at runtime.
 
 | Variable | Default | Action |
 | -------- | ------- | ------ |
@@ -285,18 +260,18 @@ The following variables trigger actions run by the [entrypoint script](https://g
 | FWD_REMOTE_IP | false | `true` enables remote IP forwarding from proxy (Apache) |
 | GIT_CHECKOUT |  | Checkout branch, tag, commit within the container. Runs `git checkout $GIT_CHECKOUT` |
 | GIT_MERGE_PR |  | Pass GitHub pull request number to merge PR within the container for testing |
-| INIT_OCTOBER | false | `true` runs october up on container start |
+| INIT_WINTER | false | `true` runs winter up on container start |
 | INIT_PLUGINS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
-| PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-oc-php.ini |
-| PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-oc-php.ini |
-| PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-oc-php.ini |
-| PHP_UPLOAD_MAX_FILESIZE | 32M | Override value for `upload_max_filesize` in docker-oc-php.ini |
-| UNIT_TEST |  | `true` runs all October CMS unit tests. Pass test filename to run a specific test. |
+| PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-wn-php.ini |
+| PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-wn-php.ini |
+| PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-wn-php.ini |
+| PHP_UPLOAD_MAX_FILESIZE | 32M | Override value for `upload_max_filesize` in docker-wn-php.ini |
+| UNIT_TEST |  | `true` runs all Winter CMS unit tests. Pass test filename to run a specific test. |
 | VERSION_INFO | false | `true` outputs container current commit, php version, and dependency info on start |
 | XDEBUG_ENABLE | false | `true` enables the Xdebug PHP extension |
 | XDEBUG_REMOTE_HOST | host.docker.internal | Override value for `xdebug.remote_host` in docker-xdebug-php.ini |
 
-#### October CMS app environment config
+#### Winter CMS app environment config
 
 List of variables used in `config/docker`
 
@@ -327,7 +302,7 @@ List of variables used in `config/docker`
 | DB_USERNAME | - |
 | MAIL_DRIVER | log |
 | MAIL_FROM_ADDRESS | no-reply@domain.tld |
-| MAIL_FROM_NAME | October CMS |
+| MAIL_FROM_NAME | Winter CMS |
 | MAIL_SMTP_ENCRYPTION | tls |
 | MAIL_SMTP_HOST | - |
 | MAIL_SMTP_PASSWORD | - |
@@ -339,8 +314,8 @@ List of variables used in `config/docker`
 
 <small>\* When using a container to serve a database, set the host value to the service name defined in your docker-compose.yml</small>
 
-<small>\** Timezone applies to both container and October CMS  config</small>
+<small>\** Timezone applies to both container and Winter CMS  config</small>
 
 ---
 
-![October](https://raw.githubusercontent.com/aspendigital/docker-octobercms/master/aspendigital-octobercms-docker-logo.png)
+![Winter](./wintercms.svg)

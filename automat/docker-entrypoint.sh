@@ -10,7 +10,7 @@ echo "$GIT_REPO_KEY" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 
 # Reset git remote URL to allow key
-git remote set-url origin git@github.com:aspendigital/docker-octobercms.git
+git remote set-url origin git@github.com:mik-p/docker-wintercms.git
 git pull
 ./update.sh --push
 
