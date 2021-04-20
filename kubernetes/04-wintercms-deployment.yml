@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wintercms
+  namespace: wintercms
+  labels:
+    app: wintercms-app
+    tier: frontend
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: wintercms-app
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: wintercms-app
+        tier: frontend
+    spec:
+      containers:
+        - name: wintercms
+          image: hiltonbanes/wintercms:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+          resources: {}

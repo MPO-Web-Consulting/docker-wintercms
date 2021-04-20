@@ -1,0 +1,28 @@
+# this ingress is specific to microk8s default nginx ingress
+# with cert manager self signed certs
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+  name: wintercms-ingress
+  namespace: wintercms
+spec:
+  ingressClassName: public
+  rules:
+  - host: on.wintercms.lan # change this to suit context
+    http:
+      paths:
+      - backend:
+          service:
+            name: wintercms-service
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - on.wintercms.lan # change this to suit context
+    secretName: wintercms-cert-tls

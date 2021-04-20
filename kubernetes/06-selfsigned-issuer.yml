@@ -1,0 +1,7 @@
+# this is not needed if the ingress strategy is changed
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
