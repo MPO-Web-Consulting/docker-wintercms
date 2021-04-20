@@ -33,10 +33,9 @@ RUN a2enmod rewrite
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.0.472
-ENV WINTERCMS_CHECKSUM fd41e9011f961ce350fde07e4a921db5ec4bc0b1
-ENV WINTERCMS_CORE_BUILD 472
-ENV WINTERCMS_CORE_HASH 2aee486006e244c4f4e8a40506a87ba2
+ENV WINTERCMS_TAG v1.1.2
+ENV WINTERCMS_CHECKSUM 20279a25a0353b6ad15564682a3b202139624f81
+ENV WINTERCMS_CORE_BUILD v1.1.2
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
   echo "Update composer.json: Set explicit build references for winter module dependencies" && \
@@ -54,12 +53,6 @@ RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 
   chown -R www-data:www-data /var/www/html && \
   find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
 
-RUN php -r "use System\\Models\\Parameter; \
-    require __DIR__.'/bootstrap/autoload.php'; \
-    \$app = require_once __DIR__.'/bootstrap/app.php'; \
-    \$app->make('Illuminate\\Contracts\\Console\\Kernel')->bootstrap(); \
-    Parameter::set(['system::core.build'=>getenv('WINTERCMS_CORE_BUILD'), 'system::core.hash'=>getenv('WINTERCMS_CORE_HASH')]); \
-    echo \"Winter CMS \\n Build: \",Parameter::get('system::core.build'), \"\\n Hash: \", Parameter::get('system::core.hash'), \"\\n\";"
 
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \
   crontab /etc/cron.d/winter-cron

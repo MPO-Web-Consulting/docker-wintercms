@@ -37,7 +37,7 @@ COPY config/docker /usr/src/wintercms-config-docker
 ENV WINTERCMS_TAG %%WINTERCMS_TAG%%
 ENV WINTERCMS_CHECKSUM %%WINTERCMS_CHECKSUM%%
 ENV WINTERCMS_CORE_BUILD %%WINTERCMS_CORE_BUILD%%
-ENV WINTERCMS_CORE_HASH %%WINTERCMS_CORE_HASH%%
+# ENV WINTERCMS_CORE_HASH %%WINTERCMS_CORE_HASH%%
 
 # Consolidated Winter CMS setup
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
@@ -66,12 +66,12 @@ RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 
   find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
 
 # Set Winter build params
-RUN php -r "use System\\Models\\Parameter; \
-    require __DIR__.'/bootstrap/autoload.php'; \
-    \$app = require_once __DIR__.'/bootstrap/app.php'; \
-    \$app->make('Illuminate\\Contracts\\Console\\Kernel')->bootstrap(); \
-    Parameter::set(['system::core.build'=>getenv('WINTERCMS_CORE_BUILD'), 'system::core.hash'=>getenv('WINTERCMS_CORE_HASH')]); \
-    echo \"Winter CMS \\n Build: \",Parameter::get('system::core.build'), \"\\n Hash: \", Parameter::get('system::core.hash'), \"\\n\";"
+# RUN php -r "use System\\Models\\Parameter; \
+#     require __DIR__.'/bootstrap/autoload.php'; \
+#     \$app = require_once __DIR__.'/bootstrap/app.php'; \
+#     \$app->make('Illuminate\\Contracts\\Console\\Kernel')->bootstrap(); \
+#     Parameter::set(['system::core.build'=>getenv('WINTERCMS_CORE_BUILD'), 'system::core.hash'=>getenv('WINTERCMS_CORE_HASH')]); \
+#     echo \"Winter CMS \\n Build: \",Parameter::get('system::core.build'), \"\\n Hash: \", Parameter::get('system::core.hash'), \"\\n\";"
 
 # Initialize crontab for the Winter CMS scheduler
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \

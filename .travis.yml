@@ -16,15 +16,6 @@ env:
       BRANCH=stable
 
     - VARIANT=php7.4/apache
-      BRANCH=edge
-    - VARIANT=php7.4/fpm
-      BRANCH=edge
-    - VARIANT=php7.2/apache
-      BRANCH=edge
-    - VARIANT=php7.2/fpm
-      BRANCH=edge
-
-    - VARIANT=php7.4/apache
       BRANCH=develop
     - VARIANT=php7.4/fpm
       BRANCH=develop
@@ -46,11 +37,6 @@ before_script:
       BUILD="build.$WINTERCMS_BUILD";
       TAG="${VARIANT//$SLASH/-}";
       TAG_LONG="$BUILD-$TAG";
-    elif [ "$BRANCH" == "edge" ]; then
-      DOCKERFILE="Dockerfile.edge";
-      BUILD="edge-build.$WINTERCMS_EDGE_BUILD";
-      TAG="edge-${VARIANT//$SLASH/-}";
-      TAG_LONG="$BUILD-${VARIANT//$SLASH/-}";
     elif [ "$BRANCH" == "develop" ]; then
       DOCKERFILE="Dockerfile.develop";
       TAG="develop-${VARIANT//$SLASH/-}";

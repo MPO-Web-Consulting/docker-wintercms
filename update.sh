@@ -12,23 +12,14 @@ if ! hash sha1sum 2>&-; then { if ! hash openssl 2>&-; then echo "Error: openssl
 ### Functions
 
 function check_winter {
-  [ "$1" = "edge" ] && EDGE=1 || EDGE=0
+  # CORE_HASH="$WINTERCMS_CORE_HASH";
 
-  # Host server PHP version - https://github.com/wintercms/winter/blob/97b0bc481f948045f96a420bb54ab48628bfdddc/modules/system/classes/UpdateManager.php#L835
-  WINTERCMS_SERVER_HASH=YToyOntzOjM6InBocCI7czo2OiI3LjAuMTMiO3M6MzoidXJsIjtzOjE2OiJodHRwOi8vbG9jYWxob3N0Ijt9
+  # curl -X POST -fsS --connect-timeout 15 --url https://api.github.com/repos/wintercms/winter/releases/latest \
+  #  -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$WINTERCMS_SERVER_HASH" -F "edge=$EDGE" \
+  #   | jq '. | { build: .core.build, hash: .core.hash, update: .update, updates: .core.updates }' || exit 1
 
-  # Set default NULL HASH if core hash isn't set
-  [ -z "$WINTERCMS_CORE_HASH" ] && WINTERCMS_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
-  [ -z "$WINTERCMS_EDGE_CORE_HASH" ] && WINTERCMS_EDGE_CORE_HASH=6c3e226b4d4795d518ab341b0824ec29
-
-  [ "$EDGE" -eq 1 ] && CORE_HASH="$WINTERCMS_EDGE_CORE_HASH" || CORE_HASH="$WINTERCMS_CORE_HASH";
-  [ "$EDGE" -eq 1 ] && CORE_BUILD="$WINTERCMS_EDGE_BUILD" || CORE_BUILD="$WINTERCMS_BUILD";
-
-  # curl -X POST -fsS --connect-timeout 15 --url http://wintercms.com/api/core/update \
-  # curl -X POST -fsS --connect-timeout 15 --url http://api.wintercms.com/api/core/update \
-  curl -X POST -fsS --connect-timeout 15 --url http://gateway.wintercms.com/api/core/update \
-   -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$WINTERCMS_SERVER_HASH" -F "edge=$EDGE" \
-    | jq '. | { build: .core.build, hash: .core.hash, update: .update, updates: .core.updates }' || exit 1
+  # curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name, hash: $CORE_HASH}' || exit 1;
+  curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name}' || exit 1;
 }
 
 function update_checksum {
@@ -52,11 +43,11 @@ function update_checksum {
 
 function update_dockerfiles {
 
-  [ "$1" = "edge" ] && local current_tag="v1.0.$EDGE_BUILD" || local current_tag="v1.0.$STABLE_BUILD"
-  [ "$1" = "edge" ] && local checksum=$EDGE_CHECKSUM || local checksum=$STABLE_CHECKSUM
-  [ "$1" = "edge" ] && local hash=$EDGE_CORE_HASH || local hash=$STABLE_CORE_HASH
-  [ "$1" = "edge" ] && local build=$EDGE_BUILD || local build=$STABLE_BUILD
-  [ "$1" = "edge" ] && local ext=".edge" || local ext=""
+  local current_tag="$STABLE_BUILD"
+  local checksum=$STABLE_CHECKSUM
+  # local hash=$STABLE_CORE_HASH
+  local build=$STABLE_BUILD
+  local ext=""
 
   [ "$1" = "develop" ] && local ext=".develop"
 
@@ -168,26 +159,6 @@ function update_buildtags {
 
       tagsMarkdown+="- $(join ', ' "${fullAliases[@]}"): [$dir/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/$dir/Dockerfile)\n"
 
-      # Build edge tags
-      [ -f "$dir/Dockerfile.edge" ] || continue
-      edgeVersion="$(cat "$dir/Dockerfile.edge" | awk '$1 == "ENV" && $2 == "WINTERCMS_CORE_BUILD" { print $3; exit }')"
-      edgeVersion=edge-build.$edgeVersion
-
-      edgeAliases=()
-      edgeAliases+=( $edgeVersion edge )
-
-      phpEdgeVersionVariantAliases=( "${edgeAliases[@]/%/-$phpVersion-$variant}" )
-      phpEdgeVersionVariantAliases=( "${phpEdgeVersionVariantAliases[@]//latest-/}" )
-
-      fullEdgeAliases=( "${phpEdgeVersionVariantAliases[@]}" )
-
-      if [ "$phpVersion" = "$defaultPhpVersion" ]; then
-        if [ "$variant" = "$defaultVariant" ]; then
-          fullEdgeAliases+=( "${edgeAliases[@]}" )
-        fi
-      fi
-      edgeTagsMarkdown+="- $(join ', ' "${fullEdgeAliases[@]}"): [$dir/Dockerfile.edge](https://github.com/mik-p/docker-wintercms/blob/master/$dir/Dockerfile.edge)\n"
-
       # Build develop tags
       [ -f "$dir/Dockerfile.develop" ] || continue
 
@@ -210,16 +181,12 @@ function update_buildtags {
 
   # Recreate README.md
   sed '/## Supported Tags/q' README.md \
-   | sed -e "s/CMS Build [0-9]*/CMS Build $STABLE_BUILD/" \
-   | sed -e "s/CMS%20Build-[0-9]*/CMS%20Build-$STABLE_BUILD/" \
-   | sed -e "s/Edge Build [0-9]*/Edge Build $EDGE_BUILD/" \
-   | sed -e "s/Edge%20Build-[0-9]*/Edge%20Build-$EDGE_BUILD/" > README_TMP.md
+   | sed -e "s/CMS Build v[0-9]*.[0-9]*.[0-9]*/CMS Build $STABLE_BUILD/" \
+   | sed -e "s/CMS%20Build-v[0-9]*.[0-9]*.[0-9]*/CMS%20Build-$STABLE_BUILD/" > README_TMP.md
   echo -e "\n${tagsMarkdown[*]}" >> README_TMP.md
-  echo -e "\n### Edge Tags" >> README_TMP.md
-  echo -e "\n${edgeTagsMarkdown[*]}" >> README_TMP.md
   echo -e "\n### Develop Tags" >> README_TMP.md
   echo -e "\n${developTagsMarkdown[*]}" >> README_TMP.md
-  sed -n -e '/# composer/,$p' README.md >> README_TMP.md
+  sed -n -e '/## Quick Start/,$p' README.md >> README_TMP.md
   mv README_TMP.md README.md
 }
 
@@ -264,46 +231,26 @@ echo "Automat: `date`"
 [ "$FORCE" ] && echo ' - Force update' || source version
 [ "$REWRITE_ONLY" ] && echo ' - Rewriting Dockerfiles and README'
 
-echo " - Querying Winter CMS API for updates..."
-# STABLE_RESPONSE=$(check_winter)
-# if [ "$(echo "$STABLE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
-if true; then
+echo " - Querying Winter CMS repo for latest..."
+LATEST_STABLE_RELEASE=$(check_winter)
+
+if [ $(echo "$LATEST_STABLE_RELEASE" | jq -r '.name') == $WINTERCMS_BUILD ]; then
   STABLE_UPDATE=0
   STABLE_BUILD=$WINTERCMS_BUILD
-  STABLE_CORE_HASH=$WINTERCMS_CORE_HASH
+  # STABLE_CORE_HASH=$WINTERCMS_CORE_HASH
   STABLE_CHECKSUM=$WINTERCMS_CHECKSUM
   echo "    No STABLE build updates ($WINTERCMS_BUILD)";
 else
   STABLE_UPDATE=1
-  STABLE_BUILD=$(echo "$STABLE_RESPONSE" | jq -r '.build')
-  STABLE_CORE_HASH=$(echo "$STABLE_RESPONSE" | jq -r '.hash')
+  STABLE_BUILD=$(echo "$LATEST_STABLE_RELEASE" | jq -r '.name')
+  # STABLE_CORE_HASH=$(echo "$STABLE_RESPONSE" | jq -r '.hash')
   echo "    New STABLE build ($WINTERCMS_BUILD -> $STABLE_BUILD)";
   echo "     STABLE Build: $STABLE_BUILD"
-  echo "     STABLE core hash: $STABLE_CORE_HASH"
+  # echo "     STABLE commit hash: $STABLE_CORE_HASH"
   echo " - Generating new checksum..."
-  STABLE_CHECKSUM=$(update_checksum "v1.0.$STABLE_BUILD")
-  echo "     GitHub Tag v1.0.$STABLE_BUILD | $STABLE_CHECKSUM"
-fi
-
-echo " - Querying Winter CMS API for EDGE updates..."
-# EDGE_RESPONSE=$(check_winter edge)
-# if [ "$(echo "$EDGE_RESPONSE" | jq -r '. | .update')" == "0" ]; then
-if true; then
-  EDGE_UPDATE=0
-  EDGE_BUILD=$WINTERCMS_EDGE_BUILD
-  EDGE_CORE_HASH=$WINTERCMS_EDGE_CORE_HASH
-  EDGE_CHECKSUM=$WINTERCMS_EDGE_CHECKSUM
-  echo "    No EDGE build updates ($WINTERCMS_EDGE_BUILD)";
-else
-  EDGE_UPDATE=1
-  EDGE_BUILD=$(echo "$EDGE_RESPONSE" | jq -r '.build')
-  EDGE_CORE_HASH=$(echo "$EDGE_RESPONSE" | jq -r '.hash')
-  echo "    New EDGE build ($WINTERCMS_EDGE_BUILD -> $EDGE_BUILD)";
-  echo "     EDGE Build: $EDGE_BUILD"
-  echo "     EDGE core hash: $EDGE_CORE_HASH"
-  echo " - Generating new checksum..."
-  EDGE_CHECKSUM=$(update_checksum "v1.0.$EDGE_BUILD")
-  echo "     GitHub Tag v1.0.$EDGE_BUILD | $EDGE_CHECKSUM"
+  STABLE_TAG=$(echo "$LATEST_STABLE_RELEASE" | jq -r '.tag')
+  STABLE_CHECKSUM=$(update_checksum "$STABLE_TAG")
+  echo "     GitHub Tag $STABLE_TAG | $STABLE_CHECKSUM"
 fi
 
 echo " - Fetching GitHub repository for latest tag..."
@@ -319,7 +266,6 @@ if [ "$GITHUB_LATEST_COMMIT" != "$WINTERCMS_DEVELOP_COMMIT" ]; then
   echo "    New DEVELOP commit";
   echo "     SHA: $GITHUB_LATEST_COMMIT"
   echo " - Generating develop checksum..."
-  # GITHUB_LATEST_CHECKSUM=$WINTERCMS_DEVELOP_CHECKSUM
   GITHUB_LATEST_CHECKSUM=$(update_checksum $GITHUB_LATEST_COMMIT)
 else
   DEVELOP_UPDATE=0
@@ -329,14 +275,11 @@ fi
 echo " - Copying entrypoint and config..."
 copy_entrypoint_config
 
-if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$EDGE_UPDATE" -eq 1 ] || [ "$DEVELOP_UPDATE" -eq 1 ]; then
+if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$DEVELOP_UPDATE" -eq 1 ]; then
   echo " - Setting build values..."
   echo "    WINTERCMS_BUILD: $STABLE_BUILD" && echo "WINTERCMS_BUILD=$STABLE_BUILD" > version
-  echo "    WINTERCMS_CORE_HASH: $STABLE_CORE_HASH" && echo "WINTERCMS_CORE_HASH=$STABLE_CORE_HASH" >> version
+  # echo "    WINTERCMS_CORE_HASH: $STABLE_CORE_HASH" && echo "WINTERCMS_CORE_HASH=$STABLE_CORE_HASH" >> version
   echo "    WINTERCMS_CHECKSUM: $STABLE_CHECKSUM" && echo "WINTERCMS_CHECKSUM=$STABLE_CHECKSUM" >> version
-  echo "    WINTERCMS_EDGE_BUILD: $EDGE_BUILD" && echo "WINTERCMS_EDGE_BUILD=$EDGE_BUILD" >> version
-  echo "    WINTERCMS_EDGE_CORE_HASH: $EDGE_CORE_HASH" && echo "WINTERCMS_EDGE_CORE_HASH=$EDGE_CORE_HASH" >> version
-  echo "    WINTERCMS_EDGE_CHECKSUM: $EDGE_CHECKSUM" && echo "WINTERCMS_EDGE_CHECKSUM=$EDGE_CHECKSUM" >> version
   echo "    WINTERCMS_DEVELOP_COMMIT: $GITHUB_LATEST_COMMIT" && echo "WINTERCMS_DEVELOP_COMMIT=$GITHUB_LATEST_COMMIT" >> version
   echo "    WINTERCMS_DEVELOP_CHECKSUM: $GITHUB_LATEST_CHECKSUM" && echo "WINTERCMS_DEVELOP_CHECKSUM=$GITHUB_LATEST_CHECKSUM" >> version
   update_dockerfiles && update_dockerfiles edge && update_dockerfiles develop
@@ -346,7 +289,7 @@ if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$EDGE_UPDATE" -
   if [ "$SLACK_WEBHOOK_URL" ]; then
     echo -n " - Posting update to Slack..."
     curl -X POST -fsS --connect-timeout 15 --data-urlencode "payload={
-      'text': 'Winter CMS Build $STABLE_BUILD | Edge Build $EDGE_BUILD | Develop $GITHUB_LATEST_COMMIT',
+      'text': 'Winter CMS Build $STABLE_BUILD | Develop $GITHUB_LATEST_COMMIT',
     }" $SLACK_WEBHOOK_URL
     echo -e ""
   fi
