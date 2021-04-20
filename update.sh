@@ -195,12 +195,8 @@ function update_repo {
   echo " - Committing changes to repo..."
   git add php*/*/Dockerfile* README.md version
 
-  if [ "$STABLE_UPDATE" -eq 1 ] && [ "$EDGE_UPDATE" -eq 1 ]; then
-    git commit -m "Build $STABLE_BUILD / Edge Build $EDGE_BUILD" -m "Automated update"
-  elif [ "$STABLE_UPDATE" -eq 1 ]; then
+  if [ "$STABLE_UPDATE" -eq 1 ]; then
     git commit -m "Build $STABLE_BUILD" -m "Automated update"
-  elif [ "$EDGE_UPDATE" -eq 1 ]; then
-    git commit -m "Edge Build $EDGE_BUILD" -m "Automated update"
   elif [ "$DEVELOP_UPDATE" -eq 1 ]; then
     git commit -m "Develop update" -m "Automated update"
   fi
@@ -282,7 +278,7 @@ if [ "$REWRITE_ONLY" -eq 1 ] || [ "$STABLE_UPDATE" -eq 1 ] || [ "$DEVELOP_UPDATE
   echo "    WINTERCMS_CHECKSUM: $STABLE_CHECKSUM" && echo "WINTERCMS_CHECKSUM=$STABLE_CHECKSUM" >> version
   echo "    WINTERCMS_DEVELOP_COMMIT: $GITHUB_LATEST_COMMIT" && echo "WINTERCMS_DEVELOP_COMMIT=$GITHUB_LATEST_COMMIT" >> version
   echo "    WINTERCMS_DEVELOP_CHECKSUM: $GITHUB_LATEST_CHECKSUM" && echo "WINTERCMS_DEVELOP_CHECKSUM=$GITHUB_LATEST_CHECKSUM" >> version
-  update_dockerfiles && update_dockerfiles edge && update_dockerfiles develop
+  update_dockerfiles && update_dockerfiles develop
   update_buildtags
   [ "$PUSH" ] && update_repo || echo ' - No changes committed.'
 
