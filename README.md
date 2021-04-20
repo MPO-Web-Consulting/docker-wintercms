@@ -22,6 +22,8 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 - `build.v1.1.2-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
 - `build.v1.1.2-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
+- `build.v1.1.2-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
+- `build.v1.1.2-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
 - `build.v1.1.2-php7.2-apache`, `php7.2-apache`, `build.v1.1.2`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
 - `build.v1.1.2-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
 
@@ -30,6 +32,8 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 - `develop-php7.4-apache`: [php7.4/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile.develop)
 - `develop-php7.4-fpm`: [php7.4/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile.develop)
+- `develop-php7.3-apache`: [php7.3/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile.develop)
+- `develop-php7.3-fpm`: [php7.3/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile.develop)
 - `develop-php7.2-apache`, `develop`: [php7.2/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile.develop)
 - `develop-php7.2-fpm`: [php7.2/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile.develop)
 
@@ -101,7 +105,7 @@ $ docker run --rm \
   hiltonbanes/wintercms php artisan winter:up
 
 # Now run with the volume mounted to your host
-$ docker run -p 80:80 --name winter \
+$ docker run -p 8080:80 --name winter \
  -v $(pwd)/storage/database.sqlite:/var/www/html/storage/database.sqlite \
  hiltonbanes/wintercms
 ```
@@ -117,7 +121,7 @@ services:
   web:
     image: hiltonbanes/wintercms:latest
     ports:
-      - 80:80
+      - 8080:80
     environment:
       - DB_TYPE=mysql
       - DB_HOST=mariadb #DB_HOST should match the service name of the database container
@@ -180,6 +184,58 @@ services:
       - TZ=America/Denver
     volumes_from:
       - web
+```
+
+## Self Signed Certificates
+
+Sometimes encyption is useful for testing. Self signed certs can be added by extending the image in another dockerfile:
+
+```dockerfile
+# Dockerfile for apache with self signed certificates
+
+FROM hiltonbanes/wintercms:develop-php7.4-apache
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ssl-cert && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod ssl; \
+    a2ensite default-ssl;
+
+EXPOSE 443
+
+CMD ["apache2-foreground"]
+
+```
+
+From a docker compose file build with:
+
+```yml
+version: '2.2'
+services:
+  web:
+    build: <Dockerfile> # Dockerfile should match file defined in example above
+    ports:
+      - 8080:80
+      - 8443:443
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=mariadb #DB_HOST should match the service name of the database container
+      - DB_DATABASE=wintercms
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    volumes:
+      # ssl certs could also be volume mapped from elsewhere
+      # - .certs/cert.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem:ro
+      # - .certs/key.key:/etc/ssl/private/ssl-cert-snakeoil.key:ro
+
+  mariadb:
+    image: mariadb:10.4
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_DATABASE=wintercms
+      - MYSQL_ROOT_PASSWORD=root
 ```
 
 ## Command Line Tasks
@@ -307,6 +363,14 @@ List of variables used in `config/docker`
 <small>\* When using a container to serve a database, set the host value to the service name defined in your docker-compose.yml</small>
 
 <small>\** Timezone applies to both container and Winter CMS  config</small>
+
+## Nice to Have To Do's
+
+- Replace Travis build with Docker build Github App
+- Add plugin list as Environment variable to install plugins on container start
+- Fix permission handling for local files
+- Kubernetes templates
+- Helm Chart
 
 ---
 
