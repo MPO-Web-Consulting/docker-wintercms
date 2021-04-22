@@ -10,6 +10,10 @@ env:
       BRANCH=stable
     - VARIANT=php7.4/fpm
       BRANCH=stable
+    - VARIANT=php7.3/apache
+      BRANCH=stable
+    - VARIANT=php7.3/fpm
+      BRANCH=stable
     - VARIANT=php7.2/apache
       BRANCH=stable
     - VARIANT=php7.2/fpm
@@ -18,6 +22,10 @@ env:
     - VARIANT=php7.4/apache
       BRANCH=develop
     - VARIANT=php7.4/fpm
+      BRANCH=develop
+    - VARIANT=php7.3/apache
+      BRANCH=develop
+    - VARIANT=php7.3/fpm
       BRANCH=develop
     - VARIANT=php7.2/apache
       BRANCH=develop
