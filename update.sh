@@ -41,6 +41,25 @@ function update_checksum {
   rm $ARCHIVE
 }
 
+function update_checksum_for_commit {
+  if [ -z "$1" ]; then
+    echo "Error: Invalid slug. Aborting..." && exit 1;
+  else
+    local SLUG=$1;
+  fi
+
+  local ARCHIVE="wintercms-$SLUG.tar.gz"
+  curl -o $ARCHIVE -fS#L --connect-timeout 15 https://github.com/wintercms/winter/archive/$SLUG.tar.gz || exit 1;
+  if hash sha1sum 2>&-; then
+    sha1sum $ARCHIVE | awk '{print $1}'
+  elif hash openssl 2>&-; then
+    openssl sha1 $ARCHIVE | awk '{print $2}'
+  else
+    echo "Error: Could not generate checksum. Aborting" && exit 1;
+  fi
+  rm $ARCHIVE
+}
+
 function update_dockerfiles {
 
   local current_tag="$STABLE_BUILD"
@@ -262,7 +281,7 @@ if [ "$GITHUB_LATEST_COMMIT" != "$WINTERCMS_DEVELOP_COMMIT" ]; then
   echo "    New DEVELOP commit";
   echo "     SHA: $GITHUB_LATEST_COMMIT"
   echo " - Generating develop checksum..."
-  GITHUB_LATEST_CHECKSUM=$(update_checksum $GITHUB_LATEST_COMMIT)
+  GITHUB_LATEST_CHECKSUM=$(update_checksum_for_commit $GITHUB_LATEST_COMMIT)
 else
   DEVELOP_UPDATE=0
   GITHUB_LATEST_CHECKSUM=$WINTERCMS_DEVELOP_CHECKSUM

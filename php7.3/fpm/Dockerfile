@@ -33,9 +33,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/l
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.1.2
-ENV WINTERCMS_CHECKSUM 20279a25a0353b6ad15564682a3b202139624f81
-ENV WINTERCMS_CORE_BUILD v1.1.2
+ENV WINTERCMS_TAG v1.1.3
+ENV WINTERCMS_CHECKSUM 2de7aea6dd136da6a0723198c52c3342083176f4
+ENV WINTERCMS_CORE_BUILD v1.1.3
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
   echo "Update composer.json: Set explicit build references for winter module dependencies" && \
