@@ -2,7 +2,7 @@
 
 # Docker + Winter CMS
 
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.1.3](https://img.shields.io/badge/Winter%20CMS%20Build-v1.1.3-red.svg)](https://github.com/wintercms/winter)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.1.5](https://img.shields.io/badge/Winter%20CMS%20Build-v1.1.5-red.svg)](https://github.com/wintercms/winter)
 
 The docker images defined in this repository serve as a starting point for [Winter CMS](https://wintercms.com) projects.
 
@@ -20,12 +20,12 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 ## Supported Tags
 
-- `build.v1.1.3-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
-- `build.v1.1.3-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
-- `build.v1.1.3-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
-- `build.v1.1.3-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
-- `build.v1.1.3-php7.2-apache`, `php7.2-apache`, `build.v1.1.3`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
-- `build.v1.1.3-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
+- `build.v1.1.5-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
+- `build.v1.1.5-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
+- `build.v1.1.5-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
+- `build.v1.1.5-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
+- `build.v1.1.5-php7.2-apache`, `php7.2-apache`, `build.v1.1.5`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
+- `build.v1.1.5-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
 
 
 ### Develop Tags
