@@ -43,8 +43,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/l
 COPY config/docker /usr/src/wintercms-config-docker
 
 ENV WINTERCMS_TAG develop
-ENV WINTERCMS_DEVELOP_CHECKSUM e13acf116cecc7f01122d4e56280544cf65081f4
-ENV WINTERCMS_DEVELOP_COMMIT 6c1ab2c5601ea9ba61b3f776f977840244956a56
+ENV WINTERCMS_DEVELOP_CHECKSUM 01b4c7d88a039e988cb650212fb9570eadb382c7
+ENV WINTERCMS_DEVELOP_COMMIT affdcce339e0b0cece1952fac08af9ee74d2255c
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG . && \
   composer install --no-interaction --prefer-dist --no-scripts && \
