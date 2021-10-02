@@ -231,6 +231,7 @@ while true; do
     --force)   FORCE=1; shift ;;
     --push)    PUSH=1; shift ;;
     --rewrite) REWRITE_ONLY=1; shift ;;
+    -h)        HELP_MSG=1; shift ;;
     *)
       break
   esac
@@ -240,6 +241,20 @@ done
 ### Run
 
 echo "Automat: `date`"
+echo ""
+echo "usage: ./update.sh [options]"
+echo ""
+echo "options:"
+echo "-h          this message"
+echo ""
+echo "--force     force the process"
+echo "--push      push the changes to source repository"
+echo "--rewrite   only rewrite the local files"
+echo ""
+
+[ "$HELP_MSG" ] && exit 0
+
+echo "starting update:"
 
 [ "$PUSH" ] && echo ' - Commit changes'
 # Load cached version if not forced

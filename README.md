@@ -37,6 +37,8 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 - `develop-php7.2-apache`, `develop`: [php7.2/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile.develop)
 - `develop-php7.2-fpm`: [php7.2/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile.develop)
 
+---
+
 ## Quick Start
 
 To run Winter CMS using Docker, start a container using the latest image, mapping your local port 80 to the container's port 80:
@@ -52,6 +54,7 @@ $ docker rm winter  # Destroys the container
  - Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
  - Run the container in the background by passing the `-d` option:
 
+<br>
 
 ## Working with Local Files
 
@@ -88,6 +91,7 @@ $ docker-compose up -d # start services defined in `docker-compose.yml` in the b
 $ docker-compose down # stop and destroy
 ```
 
+<br>
 
 ## Database Support
 
@@ -145,6 +149,8 @@ $ docker-compose up -d
 $ docker-compose exec web php artisan winter:up
 ```
 
+<br>
+
 ## Cron
 
 You can start a cron process by setting the environment variable `ENABLE_CRON` to `true`:
@@ -185,6 +191,8 @@ services:
     volumes_from:
       - web
 ```
+
+<br>
 
 ## Self Signed Certificates
 
@@ -238,6 +246,8 @@ services:
       - MYSQL_ROOT_PASSWORD=root
 ```
 
+<br>
+
 ## Command Line Tasks
 
 Run the container in the background and launch an interactive shell (bash) for the container:
@@ -271,6 +281,7 @@ $ docker exec containername artisan plugin:install winter.user
 $ docker exec -it containername tinker
 ```
 
+<br>
 
 ## App Environment
 
@@ -280,7 +291,7 @@ On image build, a default `.env` is created and [config files](./config/docker) 
 
 > __Note__: Winter CMS settings stored in a site's database override the config. Active theme, mail configuration, and other settings which are saved in the database will ultimately override configuration values.
 
-#### PHP configuration
+### PHP configuration
 
 Recommended settings for opcache and PHP are applied on image build.
 
@@ -297,8 +308,9 @@ Environment variables can be passed to both docker-compose and Winter CMS.
 
  > Passing environment variables via Docker can be problematic in production. A `phpinfo()` call may leak secrets by outputting environment variables.  Consider mounting a `.env` volume or copying it to the container directly.
 
+<br>
 
-#### Docker Entrypoint
+### Docker Entrypoint
 
 The following variables trigger actions run by the [entrypoint script](./docker-wn-entrypoint) at runtime.
 
@@ -320,7 +332,7 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | XDEBUG_ENABLE | false | `true` enables the Xdebug PHP extension |
 | XDEBUG_REMOTE_HOST | host.docker.internal | Override value for `xdebug.remote_host` in docker-xdebug-php.ini |
 
-#### Winter CMS app environment config
+### Winter CMS app environment config
 
 List of variables used in `config/docker`
 
