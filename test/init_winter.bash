@@ -22,6 +22,7 @@ docker run \
     --rm \
     -p 8888:80 \
     -e INIT_WINTER=true \
+    -e CMS_ADMIN_PASSWORD=password \
     $TEST_CONTAINER_NAME \
     bash -c "echo 'container test run complete'; exit 0" || exit 1
 
