@@ -8,7 +8,7 @@ if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
     exit 1
 fi
 
-TEST_CONTAINER_NAME=test-wn-init-plugins
+TEST_CONTAINER_NAME=test-wn-composer-update
 TEST_CONTAINER_TYPE=$SOURCE_ROOT/php7.4/apache
 
 echo "build test"
@@ -19,7 +19,7 @@ docker run \
     -it \
     --rm \
     -p 8888:80 \
-    -e INIT_PLUGINS=true \
+    -e COMPOSER_UPDATE=true \
     $TEST_CONTAINER_NAME \
     bash -c "echo 'container test run complete'; exit 0" || exit 1
 

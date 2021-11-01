@@ -322,7 +322,8 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | GIT_MERGE_PR |  | Pass GitHub pull request number to merge PR within the container for testing |
 | INIT_WINTER | false | `true` runs winter up on container start |
 | CMS_ADMIN_PASSWORD |  | Sets CMS admin password if INIT_WINTER `true` |
-| INIT_PLUGINS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
+| COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins |
+| INIT_PLUGINS_VENDOR_FOLDERS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
 | PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-wn-php.ini |
 | PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-wn-php.ini |
 | PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-wn-php.ini |

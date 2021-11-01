@@ -205,6 +205,7 @@ function update_buildtags {
   echo -e "\n${tagsMarkdown[*]}" >> README_TMP.md
   echo -e "\n### Develop Tags" >> README_TMP.md
   echo -e "\n${developTagsMarkdown[*]}" >> README_TMP.md
+  echo -e "---\n" >> README_TMP.md
   sed -n -e '/## Quick Start/,$p' README.md >> README_TMP.md
   mv README_TMP.md README.md
 }

@@ -106,12 +106,20 @@ elif [ "$1" == cron ]; then
   php artisan schedule:run
 fi
 
+# update winter and plugins using composer update
+if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
+  echo 'composer updating...'
+  composer update
+  chgrp -R www-data plugins/
+fi
+
 # Initialize vendor plugins where vendor folder isn't detected
-if [ "${INIT_PLUGINS,,}" == "true" ] || [ "${INIT_PLUGINS,,}" == "force" ]; then
+# XXX this is no longer required with winter due to the use of a specialty plugin installer that is used at the top level composer.json
+if [ "${INIT_PLUGINS_VENDOR_FOLDERS,,}" == "true" ] || [ "${INIT_PLUGINS_VENDOR_FOLDERS,,}" == "force" ]; then
   echo 'Initializing plugin vendor folders...'
   for i in $(echo plugins/*/*); do
     if [ -f "$i/composer.json" ]; then
-      if [ "${INIT_PLUGINS,,}" == "force" ] || [ ! -d "$i/vendor" ]; then
+      if [ "${INIT_PLUGINS_VENDOR_FOLDERS,,}" == "force" ] || [ ! -d "$i/vendor" ]; then
         echo " - $i"
         composer --working-dir="$i" --no-interaction --quiet install
         chown -R www-data:www-data $i
