@@ -12,14 +12,20 @@ if ! hash sha1sum 2>&-; then { if ! hash openssl 2>&-; then echo "Error: openssl
 ### Functions
 
 function check_winter {
+
   # CORE_HASH="$WINTERCMS_CORE_HASH";
 
   # curl -X POST -fsS --connect-timeout 15 --url https://api.github.com/repos/wintercms/winter/releases/latest \
   #  -F "build=$CORE_BUILD" -F "core=$CORE_HASH" -F "plugins=a:0:{}" -F "server=$WINTERCMS_SERVER_HASH" -F "edge=$EDGE" \
   #   | jq '. | { build: .core.build, hash: .core.hash, update: .update, updates: .core.updates }' || exit 1
 
-  # curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name, hash: $CORE_HASH}' || exit 1;
-  curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name}' || exit 1;
+  if [ ! -z "$1" ]; then
+    # get a tag instead
+    curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/tags | jq --argjson tag_index $1 -r '.[$tag_index] | { name: .name, tag: .name }' || exit 1;
+  else
+    # curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name, hash: $CORE_HASH}' || exit 1;
+    curl -fsS --connect-timeout 15 https://api.github.com/repos/wintercms/winter/releases/latest | jq -r '. | { name: .name, tag: .tag_name}' || exit 1;
+  fi
 }
 
 function update_checksum {
@@ -233,6 +239,7 @@ while true; do
     --push)    PUSH=1; shift ;;
     --rewrite) REWRITE_ONLY=1; shift ;;
     -h)        HELP_MSG=1; shift ;;
+    -t)        TAG_SELECT=1; shift ; GITHUB_LATEST_TAG_INDEX=$1; shift ;;
     *)
       break
   esac
@@ -247,7 +254,9 @@ echo "usage: ./update.sh [options]"
 echo ""
 echo "options:"
 echo "-h          this message"
+echo "-t          tag [index]: select a git tag by index instead of latest stable"
 echo ""
+echo "commands:"
 echo "--force     force the process"
 echo "--push      push the changes to source repository"
 echo "--rewrite   only rewrite the local files"
@@ -257,13 +266,16 @@ echo ""
 
 echo "starting update:"
 
+[ "$TAG_SELECT" ] && echo " - latest tag shifted by index: $GITHUB_LATEST_TAG_INDEX"
+
 [ "$PUSH" ] && echo ' - Commit changes'
 # Load cached version if not forced
 [ "$FORCE" ] && echo ' - Force update' || source version
 [ "$REWRITE_ONLY" ] && echo ' - Rewriting Dockerfiles and README'
 
 echo " - Querying Winter CMS repo for latest..."
-LATEST_STABLE_RELEASE=$(check_winter)
+LATEST_STABLE_RELEASE=$(check_winter $GITHUB_LATEST_TAG_INDEX)
+echo $LATEST_STABLE_RELEASE
 
 if [ $(echo "$LATEST_STABLE_RELEASE" | jq -r '.name') == $WINTERCMS_BUILD ]; then
   STABLE_UPDATE=0

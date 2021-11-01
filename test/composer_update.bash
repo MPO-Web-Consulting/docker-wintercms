@@ -10,9 +10,11 @@ fi
 
 TEST_CONTAINER_NAME=test-wn-composer-update
 TEST_CONTAINER_TYPE=$SOURCE_ROOT/php7.4/apache
+TEST_CONTAINER_DOCKERFILE=Dockerfile
+# TEST_CONTAINER_DOCKERFILE=Dockerfile.develop
 
 echo "build test"
-docker build -t $TEST_CONTAINER_NAME $TEST_CONTAINER_TYPE || exit 1
+docker build -t $TEST_CONTAINER_NAME $TEST_CONTAINER_TYPE -f $TEST_CONTAINER_TYPE/$TEST_CONTAINER_DOCKERFILE || exit 1
 
 echo "run test container"
 docker run \
