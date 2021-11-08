@@ -116,11 +116,11 @@ if [[ ! -f "$UPDATE_MARK_FILE" ]]; then
     # if there is a custom install script or new entrypoint file to fetch do so now
     if [ ! -z "$ENTRYPOINT_INSTALL_SCRIPT" ]; then
       echo 'fetching manual entrypoint/install script...'
-      wget $ENTRYPOINT_INSTALL_SCRIPT > manual.entrypoint
+      wget -c $ENTRYPOINT_INSTALL_SCRIPT -O manual-entrypoint
 
       echo 'running manual entrypoint/install script...'
       chmod +x $ENTRYPOINT_INSTALL_SCRIPT
-      ./manual.entrypoint
+      ./manual-entrypoint
     fi
 
     chgrp -R www-data plugins/
