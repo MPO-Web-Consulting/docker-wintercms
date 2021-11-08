@@ -107,10 +107,28 @@ elif [ "$1" == cron ]; then
 fi
 
 # update winter and plugins using composer update
-if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
-  echo 'composer updating...'
-  composer update
-  chgrp -R www-data plugins/
+UPDATE_MARK_FILE=.composer_did_update
+if [[ ! -f "$UPDATE_MARK_FILE" ]]; then
+  if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
+    echo 'composer updating...'
+    composer update
+
+    # if there is a custom install script or new entrypoint file to fetch do so now
+    if [ ! -z "$ENTRYPOINT_INSTALL_SCRIPT" ]; then
+      echo 'fetching manual entrypoint/install script...'
+      # wget -c $ENTRYPOINT_INSTALL_SCRIPT -O manual-entrypoint
+      curl -sS -o manual-entrypoint $ENTRYPOINT_INSTALL_SCRIPT
+
+      echo 'running manual entrypoint/install script...'
+      chmod +x manual-entrypoint
+      ./manual-entrypoint
+    fi
+
+    chgrp -R www-data plugins/
+
+    # drop a file to indicate that composer did update once and next start (if persistent data) don't implicitly update
+    touch $UPDATE_MARK_FILE
+  fi
 fi
 
 # Initialize vendor plugins where vendor folder isn't detected
