@@ -322,7 +322,7 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | GIT_MERGE_PR |  | Pass GitHub pull request number to merge PR within the container for testing |
 | INIT_WINTER | false | `true` runs winter up on container start |
 | CMS_ADMIN_PASSWORD |  | Sets CMS admin password if INIT_WINTER `true` |
-| COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins |
+| COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins (with persistent storage this will only run once) |
 | INIT_PLUGINS_VENDOR_FOLDERS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
 | PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-wn-php.ini |
 | PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-wn-php.ini |
@@ -332,6 +332,7 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | VERSION_INFO | false | `true` outputs container current commit, php version, and dependency info on start |
 | XDEBUG_ENABLE | false | `true` enables the Xdebug PHP extension |
 | XDEBUG_REMOTE_HOST | host.docker.internal | Override value for `xdebug.remote_host` in docker-xdebug-php.ini |
+| ENTRYPOINT_INSTALL_SCRIPT |  | If `COMPOSER_UPDATE=true`: Specify a url to grab an extra script to run custom commands during the entrypoint |
 
 ### Winter CMS app environment config
 
