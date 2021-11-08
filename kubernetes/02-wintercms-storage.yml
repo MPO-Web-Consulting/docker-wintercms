@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: wintercms-postgres-data
+  name: wintercms-data
   namespace: wintercms
 spec:
   accessModes:
@@ -10,4 +10,4 @@ spec:
   storageClassName: microk8s-hostpath
   resources:
     requests:
-      storage: 20Gi
+      storage: 10Gi

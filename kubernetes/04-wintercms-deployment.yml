@@ -27,3 +27,48 @@ spec:
           ports:
           - containerPort: 80
           resources: {}
+          env:
+          - name: DB_TYPE
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_TYPE
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_HOST
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_PORT
+          - name: DB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_DATABASE
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_USERNAME
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_PASSWORD
+          - name: DB_REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: DB_REDIS_HOST
+          - name: CMS_LINK_POLICY
+            valueFrom:
+              secretKeyRef:
+                name: wintercms-secret
+                key: CMS_LINK_POLICY
+      volumes:
+        - name: wintercms
+          persistentVolumeClaim:
+            claimName: wintercms-data

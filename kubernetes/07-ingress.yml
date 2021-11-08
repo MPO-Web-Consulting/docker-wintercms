@@ -5,8 +5,8 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: selfsigned-issuer
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   name: wintercms-ingress
   namespace: wintercms
 spec:

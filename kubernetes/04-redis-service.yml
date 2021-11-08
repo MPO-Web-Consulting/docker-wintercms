@@ -1,29 +1,18 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: wintercms-redis
+  name: wintercms-redis-service
   namespace: wintercms
   labels:
     app: wintercms-app
     tier: redis-app
 spec:
-  replicas: 1
+  type: ClusterIP
   selector:
-    matchLabels:
       app: wintercms-app
       tier: redis-app
-  template:
-    metadata:
-      labels:
-        app: wintercms-app
-        tier: redis-app
-    spec:
-      containers:
-      - image: redis:4.0.5-alpine
-        name: wintercms-redis
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 6379
-        resources:
-          limits:
-            cpu: "0.1"
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: http
