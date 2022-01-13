@@ -46,7 +46,7 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 To run Winter CMS using Docker, start a container using the latest image, mapping your local port 80 to the container's port 80:
 
-```shell
+```bash
 $ docker run -p 8080:80 --name winter hiltonbanes/wintercms:latest
 # `CTRL-C` to stop
 $ docker rm winter  # Destroys the container
@@ -56,6 +56,21 @@ $ docker rm winter  # Destroys the container
  - Login to the [backend](http://localhost:8080/backend) with the username `admin` and password `admin`.
  - Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
  - Run the container in the background by passing the `-d` option:
+
+### Kubernetes
+
+There are some example templates in the [kubernetes](./kubernetes) directory. Change the `secrets` and `ingress` files to support your environment requirements. Make sure to install [cert-manager](https://cert-manager.io/) to generate ssl certificates for secure ingress.
+
+```bash
+# start winter using kubernetes templates
+kubectl apply -f kubernetes/
+# to update deployment
+kubectl apply -f kubernetes/
+# to remove from cluster
+kubectl delete -f kubernetes/
+```
+
+> __Note__: The kubernetes templates were tested in a Microk8s kubernetes cluster with default (hostpath) storage class. Depending on your cluster this will need to be changed in the `storage` template files.
 
 <br>
 
@@ -283,6 +298,8 @@ $ docker exec containername artisan plugin:install winter.user
 # `tinker` invokes `php artisan tinker`. Requires `-it` for an interactive shell
 $ docker exec -it containername tinker
 ```
+
+> __Note__: There are other examples with different environment variables set up in the [examples](./examples) and [test](./test) directories.
 
 <br>
 
