@@ -2,7 +2,10 @@
 
 # Docker + Winter CMS
 
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.1.6](https://img.shields.io/badge/Winter%20CMS%20Build-v1.1.6-red.svg)](https://github.com/wintercms/winter)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.1.7](https://img.shields.io/badge/Winter%20CMS%20Build-v1.1.7-red.svg)](https://github.com/wintercms/winter)
+
+[![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
+[![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
 
 The docker images defined in this repository serve as a starting point for [Winter CMS](https://wintercms.com) projects.
 
@@ -20,12 +23,12 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 ## Supported Tags
 
-- `build.v1.1.6-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
-- `build.v1.1.6-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
-- `build.v1.1.6-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
-- `build.v1.1.6-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
-- `build.v1.1.6-php7.2-apache`, `php7.2-apache`, `build.v1.1.6`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
-- `build.v1.1.6-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
+- `build.v1.1.7-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
+- `build.v1.1.7-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
+- `build.v1.1.7-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
+- `build.v1.1.7-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
+- `build.v1.1.7-php7.2-apache`, `php7.2-apache`, `build.v1.1.7`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
+- `build.v1.1.7-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
 
 
 ### Develop Tags
@@ -373,11 +376,28 @@ List of variables used in `config/docker`
 | MAIL_SMTP_USERNAME | - |
 | QUEUE_DRIVER | sync |
 | SESSION_DRIVER | file |
+| FILESYSTEM_S3_KEY | - |
+| FILESYSTEM_S3_SECRET | - |
+| FILESYSTEM_S3_REGION | - |
+| FILESYSTEM_S3_BUCKET | - |
+| FILESYSTEM_S3_URL | - |
+| FILESYSTEM_S3_ENDPOINT | - |
+| CMS_MEDIA_DISK | local |
+| CMS_MEDIA_FOLDER | media |
+| CMS_MEDIA_PATH | /storage/app/media |
 | TZ\** | UTC |
 
 <small>\* When using a container to serve a database, set the host value to the service name defined in your docker-compose.yml</small>
 
 <small>\** Timezone applies to both container and Winter CMS  config</small>
+
+<br>
+
+## Licence
+
+This Package is licensed under MIT - Copyright (c) 2016 Aspen Digital - aspendigital.com
+
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/mik-p/docker-wintercms) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
 ## Nice to Have To Do's
 

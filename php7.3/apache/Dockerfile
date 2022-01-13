@@ -32,9 +32,9 @@ RUN a2enmod rewrite
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.1.6
-ENV WINTERCMS_CHECKSUM ae7903d9f5ac0b67c12d804db6adc0f2f9c494a8
-ENV WINTERCMS_CORE_BUILD v1.1.6
+ENV WINTERCMS_TAG v1.1.7
+ENV WINTERCMS_CHECKSUM 84213f77b2d9e3cd778fdc9d1ba0ff217bd714a9
+ENV WINTERCMS_CORE_BUILD v1.1.7
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
   echo "Update composer.json: Set explicit build references for winter module dependencies" && \
