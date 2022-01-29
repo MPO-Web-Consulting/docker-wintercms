@@ -1,0 +1,84 @@
+# this example shows a more complete deployment including:
+# - backups of the database
+# - and let's encrypt certificates
+# create a .env file to fill the necessary variables
+version: '2.2'
+services:
+  wintercms:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      redis:
+        condition: service_started
+      mariadb:
+        condition: service_healthy
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=mariadb
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=3306
+      - CACHE_STORE=redis
+      - DB_REDIS_HOST=redis
+      - FWD_REMOTE_IP=true
+      - CMS_BACKEND_FORCE_SECURE=true
+      - CMS_LINK_POLICY=secure
+      - INIT_WINTER=true
+      - CMS_ADMIN_PASSWORD=${CMS_ADMIN_PASSWORD}
+      - APP_KEY=${APP_KEY}
+      - FILESYSTEM_S3_KEY=${FILESYSTEM_S3_KEY}
+      - FILESYSTEM_S3_SECRET=${FILESYSTEM_S3_SECRET}
+      - FILESYSTEM_S3_REGION=${FILESYSTEM_S3_REGION}
+      - FILESYSTEM_S3_BUCKET=${FILESYSTEM_S3_BUCKET}
+      - FILESYSTEM_S3_ENDPOINT=${FILESYSTEM_S3_ENDPOINT}
+      - CMS_MEDIA_DISK=${CMS_MEDIA_DISK}
+      - CMS_MEDIA_FOLDER=${CMS_MEDIA_FOLDER}
+      - CMS_MEDIA_PATH=${CMS_MEDIA_PATH}
+    volumes:
+      - wintercms_data:/var/www/html
+
+  redis:
+    image: redis:6
+    restart: always
+
+  mariadb:
+    image: mariadb:10.4
+    volumes:
+        - wintercms_mariadb_data:/var/lib/mysql
+        - ${DB_BACKUP_VOLUME_PATH}/backup/latest.${DB_DATABASE}.sql.gz:/docker-entrypoint-initdb.d/database.sql.gz
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: "/usr/bin/mysql --user=${DB_USERNAME} --password=${DB_PASSWORD} --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+
+  mariadb_cron_backup:
+    image: fradelg/mysql-cron-backup
+    depends_on:
+      - mariadb
+    volumes:
+      - ${DB_BACKUP_VOLUME_PATH}/backup:/backup
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASS=${DB_PASSWORD}
+      - MAX_BACKUPS=15
+      - INIT_BACKUP=0
+      # Every day at 03:00
+      - CRON_TIME=0 3 * * *
+      # Make it small
+      - GZIP_LEVEL=9
+    restart: unless-stopped
+
+volumes:
+  wintercms_data: null
+  wintercms_mariadb_data:

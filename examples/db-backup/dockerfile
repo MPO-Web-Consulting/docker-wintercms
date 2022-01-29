@@ -1,0 +1,14 @@
+# docker file to add self signed certificates to apache web server
+FROM hiltonbanes/wintercms:php7.4-apache
+
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	ssl-cert && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod ssl; \
+	a2ensite default-ssl;
+
+EXPOSE 443
+
+CMD ["apache2-foreground"]
