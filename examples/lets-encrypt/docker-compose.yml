@@ -39,6 +39,8 @@ services:
       - CMS_MEDIA_DISK=${CMS_MEDIA_DISK}
       - CMS_MEDIA_FOLDER=${CMS_MEDIA_FOLDER}
       - CMS_MEDIA_PATH=${CMS_MEDIA_PATH}
+	  # lets encrypt email and host
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
     volumes:
       - wintercms_data:/var/www/html
 

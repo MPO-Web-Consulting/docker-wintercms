@@ -5,6 +5,7 @@ RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 	ssl-cert \
 	certbot \
+	python3-certbot-apache \
 	at && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -13,4 +14,6 @@ RUN a2enmod ssl; \
 
 EXPOSE 443
 
+COPY ./certbot-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["certbot-entrypoint.sh"]
 CMD ["apache2-foreground"]

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+echo "installing driver plugin dependencies..."
+composer require winter/wn-drivers-plugin
+
 # original entrypoint script
 docker-wn-entrypoint
 
@@ -12,10 +15,8 @@ if [[ ! -f "$CERTBOT_MARK_FILE" ]]; then
 	# this should allow the apache server to get up and running
 	# before responding to the http-01 challenge
 	# it this fails then it will have to be set up manually
-	certbot --apache | at now + 5 min
-
 	# drop a file to indicate that certbot did run once and next start (if persistent data) don't run again
-	touch $CERTBOT_MARK_FILE
+	certbot -n --apache -d $LETSENCRYPT_HOST && touch $CERTBOT_MARK_FILE | at now + 5 min
 fi
 
 exec "$@"

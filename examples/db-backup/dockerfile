@@ -11,4 +11,6 @@ RUN a2enmod ssl; \
 
 EXPOSE 443
 
+COPY ./db-backup-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["db-backup-entrypoint.sh"]
 CMD ["apache2-foreground"]
