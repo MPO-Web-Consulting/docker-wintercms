@@ -16,7 +16,7 @@ if [[ ! -f "$CERTBOT_MARK_FILE" ]]; then
 	# before responding to the http-01 challenge
 	# it this fails then it will have to be set up manually
 	# drop a file to indicate that certbot did run once and next start (if persistent data) don't run again
-	certbot -n --apache -d $LETSENCRYPT_HOST && touch $CERTBOT_MARK_FILE | at now + 5 min
+	certbot -n --agree-tos --apache --email $LETSENCRYPT_EMAIL -d $LETSENCRYPT_HOST && touch $CERTBOT_MARK_FILE | at now + 5 min
 fi
 
 exec "$@"

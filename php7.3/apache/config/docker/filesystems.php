@@ -1,7 +1,7 @@
 <?php
 /*
 | For additional options see
-| https://github.com/wintercms/winter/blob/develop/config/filesystem.php
+| https://github.com/wintercms/winter/blob/develop/config/filesystems.php
 */
 
 return [

@@ -1,37 +1,37 @@
 FROM php:7.2-fpm
 
 RUN apt-get update && apt-get install -y cron git-core jq unzip vim zip \
-  libjpeg-dev libpng-dev libpq-dev libsqlite3-dev libwebp-dev libzip-dev && \
-  rm -rf /var/lib/apt/lists/* && \
-  docker-php-ext-configure zip --with-libzip && \
-  docker-php-ext-configure gd --with-png-dir --with-jpeg-dir --with-webp-dir && \
-  docker-php-ext-install exif gd mysqli opcache pdo_pgsql pdo_mysql zip
+	libjpeg-dev libpng-dev libpq-dev libsqlite3-dev libwebp-dev libzip-dev && \
+	rm -rf /var/lib/apt/lists/* && \
+	docker-php-ext-configure zip --with-libzip && \
+	docker-php-ext-configure gd --with-png-dir --with-jpeg-dir --with-webp-dir && \
+	docker-php-ext-install exif gd mysqli opcache pdo_pgsql pdo_mysql zip
 
 RUN { \
-    echo 'opcache.memory_consumption=128'; \
-    echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=4000'; \
-    echo 'opcache.revalidate_freq=2'; \
-    echo 'opcache.fast_shutdown=1'; \
-    echo 'opcache.enable_cli=1'; \
-  } > /usr/local/etc/php/conf.d/docker-wn-opcache.ini
+	echo 'opcache.memory_consumption=128'; \
+	echo 'opcache.interned_strings_buffer=8'; \
+	echo 'opcache.max_accelerated_files=4000'; \
+	echo 'opcache.revalidate_freq=2'; \
+	echo 'opcache.fast_shutdown=1'; \
+	echo 'opcache.enable_cli=1'; \
+	} > /usr/local/etc/php/conf.d/docker-wn-opcache.ini
 
 RUN { \
-    echo 'log_errors=on'; \
-    echo 'display_errors=off'; \
-    echo 'upload_max_filesize=32M'; \
-    echo 'post_max_size=32M'; \
-    echo 'memory_limit=128M'; \
-  } > /usr/local/etc/php/conf.d/docker-wn-php.ini
+	echo 'log_errors=on'; \
+	echo 'display_errors=off'; \
+	echo 'upload_max_filesize=32M'; \
+	echo 'post_max_size=32M'; \
+	echo 'memory_limit=128M'; \
+	} > /usr/local/etc/php/conf.d/docker-wn-php.ini
 
 RUN pecl install xdebug
 
 RUN { \
-    echo "#zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" ; \
-    echo 'xdebug.remote_enable=on'; \
-    echo 'xdebug.remote_autostart=off'; \
-    echo 'xdebug.remote_host=host.docker.internal'; \
-  } > /usr/local/etc/php/conf.d/docker-xdebug-php.ini
+	echo "#zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" ; \
+	echo 'xdebug.remote_enable=on'; \
+	echo 'xdebug.remote_autostart=off'; \
+	echo 'xdebug.remote_host=host.docker.internal'; \
+	} > /usr/local/etc/php/conf.d/docker-xdebug-php.ini
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -42,30 +42,37 @@ RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/l
 COPY config/docker /usr/src/wintercms-config-docker
 
 ENV WINTERCMS_TAG develop
-ENV WINTERCMS_DEVELOP_CHECKSUM 3dd3689242c764602b908ccc317ab589a5cbe61e
-ENV WINTERCMS_DEVELOP_COMMIT 6bbfd0e885e8225bd06db91ae278cef64ef5a708
+ENV WINTERCMS_DEVELOP_CHECKSUM d9b17270d4f188ebbf3fe9d8dff97515fa1e72c5
+ENV WINTERCMS_DEVELOP_COMMIT f58633cd458937ac20d07d672a77ebc28264224a
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG . && \
-  composer install --no-interaction --prefer-dist --no-scripts && \
-  composer clearcache && \
-  git status && git checkout modules/. && \
-  echo 'APP_ENV=docker' > .env && \
-  mv /usr/src/wintercms-config-docker config/docker && \
-  echo 'config/docker' >> .git/info/exclude && \
-  touch storage/database.sqlite && \
-  chmod 666 storage/database.sqlite && \
-  php artisan winter:up && \
-  chown -R www-data:www-data /var/www/html && \
-  find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
+	# download dependencies
+	composer install --no-interaction --prefer-dist --no-scripts && \
+	composer clearcache && \
+	# ensure modules are in sync with the repo after composer install
+	git status && git checkout modules/. && \
+	# setup docker env
+	echo 'APP_ENV=docker' > .env && \
+	mv /usr/src/wintercms-config-docker config/docker && \
+	echo 'config/docker' >> .git/info/exclude && \
+	# setup database
+	touch storage/database.sqlite && \
+	chmod 666 storage/database.sqlite && \
+	php artisan winter:up && \
+	# add Winter Drivers
+	# php artisan plugin:install winter.drivers && \
+	# permissions
+	chown -R www-data:www-data /var/www/html && \
+	find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
 
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \
-  crontab /etc/cron.d/winter-cron
+	crontab /etc/cron.d/winter-cron
 
 RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
-  echo 'exec php artisan tinker' > /usr/local/bin/tinker && \
-  echo '[ $# -eq 0 ] && exec php artisan winter || exec php artisan winter:"$@"' > /usr/local/bin/winter && \
-  sed -i '1s;^;#!/bin/bash\n[ "$PWD" != "/var/www/html" ] \&\& echo " - Helper must be run from /var/www/html" \&\& exit 1\n;' /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/winter && \
-  chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/winter
+	echo 'exec php artisan tinker' > /usr/local/bin/tinker && \
+	echo '[ $# -eq 0 ] && exec php artisan winter || exec php artisan winter:"$@"' > /usr/local/bin/winter && \
+	sed -i '1s;^;#!/bin/bash\n[ "$PWD" != "/var/www/html" ] \&\& echo " - Helper must be run from /var/www/html" \&\& exit 1\n;' /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/winter && \
+	chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/winter
 
 COPY docker-wn-entrypoint /usr/local/bin/
 
