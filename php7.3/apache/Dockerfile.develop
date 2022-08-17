@@ -42,8 +42,8 @@ RUN a2enmod rewrite
 COPY config/docker /usr/src/wintercms-config-docker
 
 ENV WINTERCMS_TAG develop
-ENV WINTERCMS_DEVELOP_CHECKSUM d9b17270d4f188ebbf3fe9d8dff97515fa1e72c5
-ENV WINTERCMS_DEVELOP_COMMIT f58633cd458937ac20d07d672a77ebc28264224a
+ENV WINTERCMS_DEVELOP_CHECKSUM 4a29c74f016dceeb2636adb1befa47cc2e3627e3
+ENV WINTERCMS_DEVELOP_COMMIT ed933b4d2e4213dee8917b9d3b645f6d24449a0b
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG . && \
 	# download dependencies

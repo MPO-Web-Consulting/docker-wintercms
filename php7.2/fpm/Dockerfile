@@ -35,9 +35,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/l
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.1.8
-ENV WINTERCMS_CHECKSUM 45bc2f105dcd004ddd37e7d0389c997daaf66cdc
-ENV WINTERCMS_CORE_BUILD v1.1.8
+ENV WINTERCMS_TAG v1.1.9
+ENV WINTERCMS_CHECKSUM fd77b3411ff610ed2185a3ececd075c310f26093
+ENV WINTERCMS_CORE_BUILD v1.1.9
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
 	# match build dependencies
