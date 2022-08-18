@@ -19,7 +19,7 @@ spec:
         tier: redis-app
     spec:
       containers:
-      - image: redis:4.0.5-alpine
+      - image: redis:6-alpine
         name: wintercms-redis
         imagePullPolicy: Always
         ports:
