@@ -9,7 +9,7 @@ if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
 fi
 
 TEST_CONTAINER_NAME=test-wn-start-server
-TEST_CONTAINER_TYPE=$SOURCE_ROOT/php7.4/apache
+TEST_CONTAINER_TYPE=$SOURCE_ROOT/php8.0/apache
 TEST_CONTAINER_DOCKERFILE=Dockerfile
 # TEST_CONTAINER_DOCKERFILE=Dockerfile.develop
 

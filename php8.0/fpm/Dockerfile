@@ -1,10 +1,10 @@
-FROM php:7.3-apache
+FROM php:8.0-fpm
 
 RUN apt-get update && apt-get install -y cron git-core jq unzip vim zip \
 	libjpeg-dev libpng-dev libpq-dev libsqlite3-dev libwebp-dev libzip-dev && \
 	rm -rf /var/lib/apt/lists/* && \
-	docker-php-ext-configure zip --with-libzip && \
-	docker-php-ext-configure gd --with-png-dir --with-jpeg-dir --with-webp-dir && \
+	docker-php-ext-configure zip --with-zip && \
+	docker-php-ext-configure gd --with-jpeg --with-webp && \
 	docker-php-ext-install exif gd mysqli opcache pdo_pgsql pdo_mysql zip
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -31,13 +31,13 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/local/bin --filename=composer
 
-RUN a2enmod rewrite
+
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.1.9
-ENV WINTERCMS_CHECKSUM fd77b3411ff610ed2185a3ececd075c310f26093
-ENV WINTERCMS_CORE_BUILD v1.1.9
+ENV WINTERCMS_TAG v1.2.0
+ENV WINTERCMS_CHECKSUM 2148ad7c8ce405dfbb19527e93ad441509b2d327
+ENV WINTERCMS_CORE_BUILD v1.2.0
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
 	# match build dependencies
@@ -77,4 +77,4 @@ RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
 COPY docker-wn-entrypoint /usr/local/bin/
 
 ENTRYPOINT ["docker-wn-entrypoint"]
-CMD ["apache2-foreground"]
+CMD ["php-fpm"]

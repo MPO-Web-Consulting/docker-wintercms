@@ -1,35 +1,27 @@
 os: linux
-dist: bionic
+dist: focal
 language: shell
 services:
   - docker
 
 env:
   matrix:
-    - VARIANT=php7.4/apache
+    - VARIANT=php8.0/apache
       BRANCH=stable
-    - VARIANT=php7.4/fpm
+    - VARIANT=php8.0/fpm
       BRANCH=stable
-    - VARIANT=php7.3/apache
+    - VARIANT=php8.1/apache
       BRANCH=stable
-    - VARIANT=php7.3/fpm
-      BRANCH=stable
-    - VARIANT=php7.2/apache
-      BRANCH=stable
-    - VARIANT=php7.2/fpm
+    - VARIANT=php8.1/fpm
       BRANCH=stable
 
-    - VARIANT=php7.4/apache
+    - VARIANT=php8.0/apache
       BRANCH=develop
-    - VARIANT=php7.4/fpm
+    - VARIANT=php8.0/fpm
       BRANCH=develop
-    - VARIANT=php7.3/apache
+    - VARIANT=php8.1/apache
       BRANCH=develop
-    - VARIANT=php7.3/fpm
-      BRANCH=develop
-    - VARIANT=php7.2/apache
-      BRANCH=develop
-    - VARIANT=php7.2/fpm
+    - VARIANT=php8.1/fpm
       BRANCH=develop
 
 install:
@@ -69,7 +61,7 @@ after_success:
         docker push "$IMAGE:$TAG_LONG";
       fi
 
-      if [ "$VARIANT" == "php7.2/apache" ]; then
+      if [ "$VARIANT" == "php8.0/apache" ]; then
         if [ ! -z "$BUILD" ]; then
           docker build -t "$IMAGE:$BUILD" -f $DOCKERFILE .;
           docker push "$IMAGE:$BUILD";

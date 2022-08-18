@@ -2,7 +2,7 @@
 
 # Docker + Winter CMS
 
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.1.9](https://img.shields.io/badge/Winter%20CMS%20Build-v1.1.9-red.svg)](https://github.com/wintercms/winter)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.2.0](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.0-red.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
 [![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
@@ -23,22 +23,18 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 ## Supported Tags
 
-- `build.v1.1.9-php7.4-apache`, `php7.4-apache`: [php7.4/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile)
-- `build.v1.1.9-php7.4-fpm`, `php7.4-fpm`: [php7.4/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile)
-- `build.v1.1.9-php7.3-apache`, `php7.3-apache`: [php7.3/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile)
-- `build.v1.1.9-php7.3-fpm`, `php7.3-fpm`: [php7.3/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile)
-- `build.v1.1.9-php7.2-apache`, `php7.2-apache`, `build.v1.1.9`, `latest`: [php7.2/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile)
-- `build.v1.1.9-php7.2-fpm`, `php7.2-fpm`: [php7.2/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile)
+- `build.v1.2.0-php8.1-apache`, `php8.1-apache`: [php8.1/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile)
+- `build.v1.2.0-php8.1-fpm`, `php8.1-fpm`: [php8.1/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile)
+- `build.v1.2.0-php8.0-apache`, `php8.0-apache`, `build.v1.2.0`, `latest`: [php8.0/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile)
+- `build.v1.2.0-php8.0-fpm`, `php8.0-fpm`: [php8.0/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile)
 
 
 ### Develop Tags
 
-- `develop-php7.4-apache`: [php7.4/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/apache/Dockerfile.develop)
-- `develop-php7.4-fpm`: [php7.4/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.4/fpm/Dockerfile.develop)
-- `develop-php7.3-apache`: [php7.3/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/apache/Dockerfile.develop)
-- `develop-php7.3-fpm`: [php7.3/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.3/fpm/Dockerfile.develop)
-- `develop-php7.2-apache`, `develop`: [php7.2/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/apache/Dockerfile.develop)
-- `develop-php7.2-fpm`: [php7.2/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php7.2/fpm/Dockerfile.develop)
+- `develop-php8.1-apache`: [php8.1/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile.develop)
+- `develop-php8.1-fpm`: [php8.1/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile.develop)
+- `develop-php8.0-apache`, `develop`: [php8.0/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile.develop)
+- `develop-php8.0-fpm`: [php8.0/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile.develop)
 
 ---
 
@@ -219,7 +215,7 @@ Sometimes encyption is useful for testing. Self signed certs can be added by ext
 ```dockerfile
 # Dockerfile for apache with self signed certificates
 
-FROM hiltonbanes/wintercms:develop-php7.4-apache
+FROM hiltonbanes/wintercms:develop-php8.0-apache
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \

@@ -76,7 +76,7 @@ function update_dockerfiles {
 
   [ "$1" = "develop" ] && local ext=".develop"
 
-  local phpVersions=( php7.*/ )
+  local phpVersions=( php8.*/ )
 
   phpVersions=( "${phpVersions[@]%/}" )
 
@@ -84,13 +84,13 @@ function update_dockerfiles {
     phpVersionDir="$phpVersion"
     phpVersion="${phpVersion#php}"
 
-    if [ "$phpVersion" == "7.4" ]; then
-      gd_config="docker-php-ext-configure gd --with-jpeg --with-webp"
-      zip_config="docker-php-ext-configure zip --with-zip"
-    else
-      gd_config="docker-php-ext-configure gd --with-png-dir --with-jpeg-dir --with-webp-dir"
-      zip_config="docker-php-ext-configure zip --with-libzip"
-    fi
+    # if [ "$phpVersion" == "7.4" ]; then
+    gd_config="docker-php-ext-configure gd --with-jpeg --with-webp"
+    zip_config="docker-php-ext-configure zip --with-zip"
+    # else
+    #   gd_config="docker-php-ext-configure gd --with-png-dir --with-jpeg-dir --with-webp-dir"
+    #   zip_config="docker-php-ext-configure zip --with-libzip"
+    # fi
 
     for variant in apache fpm; do
       dir="$phpVersionDir/$variant"
@@ -125,7 +125,7 @@ function update_dockerfiles {
 }
 
 function copy_entrypoint_config {
-  local phpVersions=( php7.*/ )
+  local phpVersions=( php8.*/ )
 
   phpVersions=( "${phpVersions[@]%/}" )
 
@@ -150,10 +150,10 @@ function join {
 
 function update_buildtags {
 
-  defaultPhpVersion='php7.2'
+  defaultPhpVersion='php8.0'
   defaultVariant='apache'
 
-  phpFolders=( php7.*/ )
+  phpFolders=( php8.*/ )
   phpVersions=()
   # process in descending order
   for (( idx=${#phpFolders[@]}-1 ; idx>=0 ; idx-- )) ; do
