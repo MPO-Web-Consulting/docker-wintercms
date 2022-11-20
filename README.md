@@ -2,7 +2,7 @@
 
 # Docker + Winter CMS
 
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.2.0](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.0-red.svg)](https://github.com/wintercms/winter)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.2.1](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.1-red.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
 [![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
@@ -23,10 +23,10 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 ## Supported Tags
 
-- `build.v1.2.0-php8.1-apache`, `php8.1-apache`: [php8.1/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile)
-- `build.v1.2.0-php8.1-fpm`, `php8.1-fpm`: [php8.1/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile)
-- `build.v1.2.0-php8.0-apache`, `php8.0-apache`, `build.v1.2.0`, `latest`: [php8.0/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile)
-- `build.v1.2.0-php8.0-fpm`, `php8.0-fpm`: [php8.0/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile)
+- `build.v1.2.1-php8.1-apache`, `php8.1-apache`: [php8.1/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile)
+- `build.v1.2.1-php8.1-fpm`, `php8.1-fpm`: [php8.1/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile)
+- `build.v1.2.1-php8.0-apache`, `php8.0-apache`, `build.v1.2.1`, `latest`: [php8.0/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile)
+- `build.v1.2.1-php8.0-fpm`, `php8.0-fpm`: [php8.0/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile)
 
 
 ### Develop Tags

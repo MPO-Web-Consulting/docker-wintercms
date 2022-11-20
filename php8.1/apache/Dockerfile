@@ -35,9 +35,9 @@ RUN a2enmod rewrite
 
 COPY config/docker /usr/src/wintercms-config-docker
 
-ENV WINTERCMS_TAG v1.2.0
-ENV WINTERCMS_CHECKSUM 2148ad7c8ce405dfbb19527e93ad441509b2d327
-ENV WINTERCMS_CORE_BUILD v1.2.0
+ENV WINTERCMS_TAG v1.2.1
+ENV WINTERCMS_CHECKSUM fb112c51a7c065d08f92b39bad0f82ca053e52e8
+ENV WINTERCMS_CORE_BUILD v1.2.1
 
 RUN git clone https://github.com/wintercms/winter.git -b $WINTERCMS_TAG --depth 1 . && \
 	# match build dependencies
