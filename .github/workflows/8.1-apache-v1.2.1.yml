@@ -4,7 +4,7 @@ name: Build, test, and publish Docker Image tagged 8.1-apache-v1.2.1
 env:
   OWNER: mpo-web-consulting
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_NAME: wintercms
 
 # For more details on events that trigger workflows see:
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows

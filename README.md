@@ -1,10 +1,10 @@
-![Winter](./docs/images/wintercms.svg)
+[![Winter](./docs/images/wintercms.svg)](https://wintercms.com)
 
 # Docker + Winter CMS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/)
-[![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-red.svg)](https://github.com/wintercms/winter)
+[![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-blueviolet.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
 [![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
@@ -23,27 +23,48 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 
 ---
 
-## Supported Tags
+## Supported Versions
 
-- `build.v1.2.1-php8.1-apache`, `php8.1-apache`: [php8.1/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile)
-- `build.v1.2.1-php8.1-fpm`, `php8.1-fpm`: [php8.1/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile)
-- `build.v1.2.1-php8.0-apache`, `php8.0-apache`, `build.v1.2.1`, `latest`: [php8.0/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile)
-- `build.v1.2.1-php8.0-fpm`, `php8.0-fpm`: [php8.0/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile)
+![PHP7.4](https://img.shields.io/badge/PHP-7.4-teal.svg)
+![PHP8.0](https://img.shields.io/badge/PHP-8.0-teal.svg)
+![PHP8.1](https://img.shields.io/badge/PHP-8.1-teal.svg)
+![PHP8.2](https://img.shields.io/badge/PHP-8.2-teal.svg)
+![Apache](https://img.shields.io/badge/Web%20Server-Apache-teal.svg)
+![FPM](https://img.shields.io/badge/Web%20Server-FPM-teal.svg)
 
----
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.1.8-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.1.9-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.1.10-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.0-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.1-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.2-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.3-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.4-blueviolet.svg)
+
+### Supported Tags
+
+Tags are combinations of PHP version, web server, and Winter CMS build. The `latest` tag is the most recent release of Winter CMS on the most recent PHP version and with Apache.
+
+The following tags are examples:
+
+| Winter CMS Build | PHP Version | Web Server | Tag |
+| ---------------- | ----------- | ---------- | --- |
+| 1.2.4 | 8.2 | Apache | `8.2-apache-v1.2.4`, `latest` |
+| 1.2.3 | 8.0 | FPM | `8.0-fpm-v1.2.3` |
 
 ## Quick Start
 
 To run Winter CMS using Docker, start a container using the latest image, mapping your local port 80 to the container's port 80:
 
 ```bash
-$ docker run -p 8080:80 --name winter hiltonbanes/wintercms:latest
+$ docker run -p 8080:80 --name winter ghcr.io/mpo-web-consulting/wintercms:latest
 # `CTRL-C` to stop
 $ docker rm winter  # Destroys the container
 ```
 
 - Visit [http://localhost:8080](http://localhost:8080) using your browser.
-- Login to the [backend](http://localhost:8080/backend) with the username `admin` and password `admin`.
+- Login to the [backend](http://localhost:8080/backend) with the username `admin`
+- The password for `admin` is generated on first load and printed into the container logs.
 - Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
 - Run the container in the background by passing the `-d` option:
 
@@ -76,7 +97,7 @@ $ git clone git@github.com:wintercms/wn-user-plugin.git
 $ cd wn-user-plugin
 $ docker run -p 8080:80 --rm \
   -v $(pwd):/var/www/html/plugins/winter/user \
-  hiltonbanes/wintercms:latest
+  ghcr.io/mpo-web-consulting/wintercms:latest
 ```
 
 Save yourself some keyboards strokes, utilize [docker-compose](https://docs.docker.com/compose/overview/) by introducing a `docker-compose.yml` file to your project folder:
@@ -86,7 +107,7 @@ Save yourself some keyboards strokes, utilize [docker-compose](https://docs.dock
 version: '2.2'
 services:
   web:
-    image: hiltonbanes/wintercms
+    image: ghcr.io/mpo-web-consulting/wintercms
     ports:
       - 8080:80
     volumes:
@@ -115,12 +136,12 @@ When projects require a persistent SQLite database, copy or create a new databas
 $ touch storage/database.sqlite
 $ docker run --rm \
   -v $(pwd)/storage/database.sqlite:/var/www/html/storage/database.sqlite \
-  hiltonbanes/wintercms php artisan winter:up
+  ghcr.io/mpo-web-consulting/wintercms php artisan winter:up
 
 # Now run with the volume mounted to your host
 $ docker run -p 8080:80 --name winter \
  -v $(pwd)/storage/database.sqlite:/var/www/html/storage/database.sqlite \
- hiltonbanes/wintercms
+ ghcr.io/mpo-web-consulting/wintercms
 ```
 
 #### MySQL / Postgres
@@ -132,7 +153,7 @@ Alternatively, you can host the database using another container:
 version: '2.2'
 services:
   web:
-    image: hiltonbanes/wintercms:latest
+    image: ghcr.io/mpo-web-consulting/wintercms:latest
     ports:
       - 8080:80
     environment:
@@ -166,7 +187,7 @@ docker-compose exec web php artisan winter:up
 You can start a cron process by setting the environment variable `ENABLE_CRON` to `true`:
 
 ```shell
-docker run -p 8080:80 -e ENABLE_CRON=true hiltonbanes/wintercms:latest
+docker run -p 8080:80 -e ENABLE_CRON=true ghcr.io/mpo-web-consulting/wintercms:latest
 ```
 
 Separate the cron process into it's own container:
@@ -176,7 +197,7 @@ Separate the cron process into it's own container:
 version: '2.2'
 services:
   web:
-    image: hiltonbanes/wintercms:latest
+    image: ghcr.io/mpo-web-consulting/wintercms:latest
     init: true
     restart: always
     ports:
@@ -192,7 +213,7 @@ services:
       - ./themes:/var/www/html/themes
 
   cron:
-    image: hiltonbanes/wintercms:latest
+    image: ghcr.io/mpo-web-consulting/wintercms:latest
     init: true
     restart: always
     command: [cron, -f]
@@ -211,7 +232,7 @@ Sometimes encyption is useful for testing. Self signed certs can be added by ext
 ```dockerfile
 # Dockerfile for apache with self signed certificates
 
-FROM hiltonbanes/wintercms:develop-php8.0-apache
+FROM ghcr.io/mpo-web-consulting/wintercms:develop-php8.0-apache
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -263,7 +284,7 @@ services:
 Run the container in the background and launch an interactive shell (bash) for the container:
 
 ```shell
-docker run -p 8080:80 --name containername -d hiltonbanes/wintercms:latest
+docker run -p 8080:80 --name containername -d ghcr.io/mpo-web-consulting/wintercms:latest
 docker exec -it containername bash
 ```
 
@@ -408,12 +429,9 @@ This package is [Treeware](https://treeware.earth). If you use it in production,
 
 ## Nice to Have To Do's
 
-- Replace Travis build with Docker build Github App
 - Add plugin list as Environment variable to install plugins on container start
 - Fix permission handling for local files
 - Kubernetes templates
 - Helm Chart
 
----
-
-![Winter](./docs/images/wintercms.svg)
+[![Winter](./docs/images/wintercms.svg)](https://wintercms.com)
