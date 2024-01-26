@@ -1,3 +1,9 @@
+## ⚠️ Attention
+
+**The development on this source has moved!** - Visit [docker-wintercms at mpo-web-consulting](https://guthub.com/MPO-Web-Consulting/docker-wintercms)
+
+---
+
 [![Winter](./docs/images/wintercms.svg)](https://wintercms.com)
 
 # Docker + Winter CMS
