@@ -71,7 +71,7 @@ COPY config/docker config/docker
 
 # install winter
 RUN php artisan migrate
-#RUN php artisan winter:install
+# RUN php artisan winter:install
 
 # permissions
 RUN chown -R www-data:www-data /var/www/html && \

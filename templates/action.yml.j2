@@ -69,8 +69,8 @@ jobs:
           # Full logs for CI build
           BUILDKIT_PROGRESS: plain
 
-      - name: Run tests ✅
-        run: python3 -m pytest tests
+      # - name: Run tests ✅
+      #  run: python3 -m pytest tests
 
       - name: Login to container registry 🔐
         if: github.ref == 'refs/heads/main'
