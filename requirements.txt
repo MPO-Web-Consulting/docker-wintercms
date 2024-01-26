@@ -1,0 +1,5 @@
+docker
+pytest
+requests
+jinja2
+pyyaml

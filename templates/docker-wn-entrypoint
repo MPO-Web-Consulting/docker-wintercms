@@ -1,0 +1,75 @@
+#!/bin/bash
+set -e
+
+# PHP config
+if [ ! -z "$PHP_DISPLAY_ERRORS" ]; then
+  echo "php.ini set display_errors=$PHP_DISPLAY_ERRORS"
+  sed -i "/display_errors=*/c\display_errors=$PHP_DISPLAY_ERRORS" /usr/local/etc/php/conf.d/docker-wn-php.ini
+fi
+
+if [ ! -z "$PHP_POST_MAX_SIZE" ]; then
+  echo "php.ini set post_max_size=$PHP_POST_MAX_SIZE"
+  sed -i "/post_max_size=*/c\post_max_size=$PHP_POST_MAX_SIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
+fi
+
+if [ ! -z "$PHP_MEMORY_LIMIT" ]; then
+  echo "php.ini set memory_limit=$PHP_MEMORY_LIMIT"
+  sed -i "/memory_limit=*/c\memory_limit=$PHP_MEMORY_LIMIT" /usr/local/etc/php/conf.d/docker-wn-php.ini
+fi
+
+if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
+  echo "php.ini set upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE"
+  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
+fi
+
+if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
+  echo "php.ini set upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE"
+  sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-wn-php.ini
+fi
+
+# Display current commit, php version, and dependency info
+if [ "${VERSION_INFO,,}" == "true" ]; then
+  php --version | grep PHP -m 1
+  composer info | grep winter | awk '{print $1 ": " $2}'
+  php artisan winter:version
+  echo "---"
+fi
+
+# Enable remote IP forwarding for proxy support
+if [[ "$1" == apache2* ]] && [ "${FWD_REMOTE_IP,,}" == "true" ]; then
+  a2enmod remoteip -q
+  echo 'RemoteIPHeader X-Forwarded-For' > $APACHE_CONFDIR/conf-available/docker-wn-apache.conf
+  a2enconf docker-wn-apache -q
+fi
+
+# Start a cron process within the container
+if [ "${ENABLE_CRON,,}" == "true" ]; then
+  php artisan schedule:run # required to prime db connection
+  cron
+  echo 'Cron enabled.'
+elif [ "$1" == cron ]; then
+  php artisan schedule:run
+fi
+
+# update winter and plugins using composer update
+if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
+  echo 'composer updating...'
+  composer update
+
+  chgrp -R www-data plugins/
+fi
+
+# Run winter up on container start
+if [ "${INIT_WINTER,,}" == "true" ]; then
+  echo 'Initializing Winter CMS...'
+  php artisan winter:up
+
+  # newer versions of winter generate random passwords for admin
+  # if the environment option for admin password is set then change it here
+  if [ ! -z "$CMS_ADMIN_PASSWORD" ]; then
+    echo 'Update Winter CMS admin password...'
+	  php artisan winter:passwd admin $CMS_ADMIN_PASSWORD
+  fi
+fi
+
+exec "$@"

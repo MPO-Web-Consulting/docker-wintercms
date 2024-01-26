@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# input arg or set to a default
+PHP_VERSION=${1:-7.4}
+PHP_VARIANT=${2:-apache}
+WINTER_VERSION=${3:-1.1.10}
+
+# check if test is run in the right directory
 TEST_ROOT=test
 SOURCE_ROOT=..
 
@@ -9,12 +15,11 @@ if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
 fi
 
 TEST_CONTAINER_NAME=test-wn-init-winter
-TEST_CONTAINER_TYPE=$SOURCE_ROOT/php8.0/apache
+TEST_CONTAINER_TYPE=$SOURCE_ROOT/images/php-$PHP_VERSION/$PHP_VARIANT/v$WINTER_VERSION
 TEST_CONTAINER_DOCKERFILE=Dockerfile
-# TEST_CONTAINER_DOCKERFILE=Dockerfile.develop
 
 echo "build test"
-docker build -t $TEST_CONTAINER_NAME $TEST_CONTAINER_TYPE || exit 1
+docker build -t $TEST_CONTAINER_NAME -f $TEST_CONTAINER_TYPE/$TEST_CONTAINER_DOCKERFILE $SOURCE_ROOT/templates || exit 1
 
 echo "run test container"
 docker run \

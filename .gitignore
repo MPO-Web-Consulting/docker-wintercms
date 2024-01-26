@@ -1,1 +1,10 @@
+.vscode/
+
+.venv/
+.env/
 .env
+
+build/
+
+# python
+*.py[cod]

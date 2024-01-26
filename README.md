@@ -1,8 +1,10 @@
-![Winter](./wintercms.svg)
+![Winter](./docs/images/wintercms.svg)
 
 # Docker + Winter CMS
 
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/) [![Winter CMS Build v1.2.1](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.1-red.svg)](https://github.com/wintercms/winter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/)
+[![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-red.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
 [![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
@@ -28,14 +30,6 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 - `build.v1.2.1-php8.0-apache`, `php8.0-apache`, `build.v1.2.1`, `latest`: [php8.0/apache/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile)
 - `build.v1.2.1-php8.0-fpm`, `php8.0-fpm`: [php8.0/fpm/Dockerfile](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile)
 
-
-### Develop Tags
-
-- `develop-php8.1-apache`: [php8.1/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/apache/Dockerfile.develop)
-- `develop-php8.1-fpm`: [php8.1/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.1/fpm/Dockerfile.develop)
-- `develop-php8.0-apache`, `develop`: [php8.0/apache/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/apache/Dockerfile.develop)
-- `develop-php8.0-fpm`: [php8.0/fpm/Dockerfile.develop](https://github.com/mik-p/docker-wintercms/blob/master/php8.0/fpm/Dockerfile.develop)
-
 ---
 
 ## Quick Start
@@ -48,10 +42,10 @@ $ docker run -p 8080:80 --name winter hiltonbanes/wintercms:latest
 $ docker rm winter  # Destroys the container
 ```
 
- - Visit [http://localhost:8080](http://localhost:8080) using your browser.
- - Login to the [backend](http://localhost:8080/backend) with the username `admin` and password `admin`.
- - Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
- - Run the container in the background by passing the `-d` option:
+- Visit [http://localhost:8080](http://localhost:8080) using your browser.
+- Login to the [backend](http://localhost:8080/backend) with the username `admin` and password `admin`.
+- Hit `CTRL-C` to stop the container. Running a container in the foreground will send log outputs to your terminal.
+- Run the container in the background by passing the `-d` option:
 
 ### Kubernetes
 
@@ -98,11 +92,12 @@ services:
     volumes:
       - $PWD:/var/www/html/plugins/winter/user
 ```
+
 With the above example saved in working directory, run:
 
 ```shell
-$ docker-compose up -d # start services defined in `docker-compose.yml` in the background
-$ docker-compose down # stop and destroy
+docker-compose up -d # start services defined in `docker-compose.yml` in the background
+docker-compose down # stop and destroy
 ```
 
 <br>
@@ -156,11 +151,12 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=wintercms
 ```
+
 Provision a new database with `winter:up`:
 
 ```ssh
-$ docker-compose up -d
-$ docker-compose exec web php artisan winter:up
+docker-compose up -d
+docker-compose exec web php artisan winter:up
 ```
 
 <br>
@@ -170,7 +166,7 @@ $ docker-compose exec web php artisan winter:up
 You can start a cron process by setting the environment variable `ENABLE_CRON` to `true`:
 
 ```shell
-$ docker run -p 8080:80 -e ENABLE_CRON=true hiltonbanes/wintercms:latest
+docker run -p 8080:80 -e ENABLE_CRON=true hiltonbanes/wintercms:latest
 ```
 
 Separate the cron process into it's own container:
@@ -266,10 +262,9 @@ services:
 
 Run the container in the background and launch an interactive shell (bash) for the container:
 
-
 ```shell
-$ docker run -p 8080:80 --name containername -d hiltonbanes/wintercms:latest
-$ docker exec -it containername bash
+docker run -p 8080:80 --name containername -d hiltonbanes/wintercms:latest
+docker exec -it containername bash
 ```
 
 Commands can also be run directly, without opening a shell:
@@ -317,7 +312,6 @@ To customize the PHP configuration further, add or replace `.ini` files found in
 
 ### Environment Variables
 
-
 Environment variables can be passed to both docker-compose and Winter CMS.
 
  > Database credentials and other sensitive information should not be committed to the repository. Those required settings should be outlined in __.env.example__
@@ -358,7 +352,7 @@ List of variables used in `config/docker`
 | -------- | ------- |
 | APP_DEBUG | false |
 | APP_KEY | 0123456789ABCDEFGHIJKLMNOPQRSTUV |
-| APP_URL | http://localhost |
+| APP_URL | <http://localhost> |
 | APP_LOCALE | en |
 | CACHE_STORE | file |
 | CMS_ACTIVE_THEME | demo |
@@ -380,7 +374,7 @@ List of variables used in `config/docker`
 | DB_TYPE | sqlite |
 | DB_USERNAME | - |
 | MAIL_DRIVER | log |
-| MAIL_FROM_ADDRESS | no-reply@domain.tld |
+| MAIL_FROM_ADDRESS | <no-reply@domain.tld> |
 | MAIL_FROM_NAME | Winter CMS |
 | MAIL_SMTP_ENCRYPTION | tls |
 | MAIL_SMTP_HOST | - |
@@ -410,7 +404,7 @@ List of variables used in `config/docker`
 
 This Package is licensed under MIT - Copyright (c) 2016 Aspen Digital - aspendigital.com
 
-This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/mik-p/docker-wintercms) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [__buy the world a tree__](https://plant.treeware.earth/mik-p/docker-wintercms) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
 ## Nice to Have To Do's
 
@@ -422,4 +416,4 @@ This package is [Treeware](https://treeware.earth). If you use it in production,
 
 ---
 
-![Winter](./wintercms.svg)
+![Winter](./docs/images/wintercms.svg)
