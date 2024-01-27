@@ -1,0 +1,9 @@
+## Nice to Have To Do's
+
+- Add plugin list as Environment variable to install plugins on container start
+- Fix permission handling for local files
+- Fix kubernetes templates
+- Create a Helm Chart
+- pytests during build
+- pytests for environment variables
+- add fix-permissions script to container

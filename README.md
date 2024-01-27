@@ -3,11 +3,12 @@
 # Docker + Winter CMS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+![GitHub issues](https://img.shields.io/github/issues-raw/MPO-Web-Consulting/docker-wintercms)
 [![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/)
 [![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-blueviolet.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
-[![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/mik-p/docker-wintercms)
+[![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/MPO-Web-Consulting/docker-wintercms)
 
 The docker images defined in this repository serve as a starting point for [Winter CMS](https://wintercms.com) projects.
 
@@ -20,8 +21,6 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 - [Cron](#cron)
 - [Command Line Tasks](#command-line-tasks)
 - [App Environment](#app-environment)
-
----
 
 ## Supported Versions
 
@@ -83,8 +82,6 @@ kubectl delete -f kubernetes/
 
 > __Note__: The kubernetes templates were tested in a Microk8s kubernetes cluster with default (hostpath) storage class. Depending on your cluster this will need to be changed in the `storage` template files.
 
-<br>
-
 ## Working with Local Files
 
 Using Docker volumes, you can mount local files inside a container.
@@ -120,8 +117,6 @@ With the above example saved in working directory, run:
 docker-compose up -d # start services defined in `docker-compose.yml` in the background
 docker-compose down # stop and destroy
 ```
-
-<br>
 
 ## Database Support
 
@@ -180,8 +175,6 @@ docker-compose up -d
 docker-compose exec web php artisan winter:up
 ```
 
-<br>
-
 ## Cron
 
 You can start a cron process by setting the environment variable `ENABLE_CRON` to `true`:
@@ -223,8 +216,6 @@ services:
       - web
 ```
 
-<br>
-
 ## Self Signed Certificates
 
 Sometimes encyption is useful for testing. Self signed certs can be added by extending the image in another dockerfile:
@@ -245,7 +236,6 @@ RUN a2enmod ssl; \
 EXPOSE 443
 
 CMD ["apache2-foreground"]
-
 ```
 
 From a docker compose file build with:
@@ -276,8 +266,6 @@ services:
       - MYSQL_DATABASE=wintercms
       - MYSQL_ROOT_PASSWORD=root
 ```
-
-<br>
 
 ## Command Line Tasks
 
@@ -313,8 +301,6 @@ $ docker exec -it containername tinker
 
 > __Note__: There are other examples with different environment variables set up in the [examples](./examples) and [test](./test) directories.
 
-<br>
-
 ## App Environment
 
 By default, `APP_ENV` is set to `docker`.
@@ -336,10 +322,8 @@ To customize the PHP configuration further, add or replace `.ini` files found in
 Environment variables can be passed to both docker-compose and Winter CMS.
 
  > Database credentials and other sensitive information should not be committed to the repository. Those required settings should be outlined in __.env.example__
-
+ >
  > Passing environment variables via Docker can be problematic in production. A `phpinfo()` call may leak secrets by outputting environment variables.  Consider mounting a `.env` volume or copying it to the container directly.
-
-<br>
 
 ### Docker Entrypoint
 
@@ -413,19 +397,60 @@ List of variables used in `config/docker`
 
 <small>\** Timezone applies to both container and Winter CMS  config</small>
 
-<br>
+## Development
+
+Create a virtual environment and install the requirements:
+
+```bash
+# create virtual environment
+python3 -m venv .venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Building Images
+
+The images are built using [docker build](https://docs.docker.com/engine/reference/commandline/build/). To build an image, run the following command:
+
+```bash
+# build an image
+docker build -t ghcr.io/mpo-web-consulting/wintercms:latest -f images/php-8.2/apache/v1.2.4/Dockerfile ./templates
+```
+
+### Generating Images and Actions
+
+The images and actions are generated from templates using [Jinja2](https://jinja.palletsprojects.com/en/3.0.x/). The templates are located in the `templates` directory. The images are defined in `images.yaml`.
+
+Use the following commands to generate the images and github actions files:
+
+```bash
+# generate Dockerfiles for all images
+python3 scripts/generate_images.py templates/Dockerfile.j2 images images.yaml
+
+# generate actions for all images
+python3 scripts/generate_workflows.py templates/action.yml.j2 images .github/workflows
+```
+
+### Adding a new Winter CMS Build
+
+To add a new Winter CMS build, update the `images.yaml` file with the new version and run the generate scripts.
+
+### Testing
+
+The tests are run using [pytest](https://docs.pytest.org/en/6.2.x/). The tests are located in the `tests` directory.
+
+```bash
+# run tests
+python -m pytest tests
+```
 
 ## Licence
 
+[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Treeware](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-green.svg)](https://treeware.earth)
+
 This Package is licensed under MIT - Copyright (c) 2016 Aspen Digital - aspendigital.com
 
-This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [__buy the world a tree__](https://plant.treeware.earth/mik-p/docker-wintercms) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
-
-## Nice to Have To Do's
-
-- Add plugin list as Environment variable to install plugins on container start
-- Fix permission handling for local files
-- Kubernetes templates
-- Helm Chart
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [__buy the world a tree__](https://plant.treeware.earth/MPO-Web-Consulting/docker-wintercms) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
 [![Winter](./docs/images/wintercms.svg)](https://wintercms.com)
