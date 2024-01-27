@@ -1,6 +1,11 @@
 #!/bin/bash -e
 
-TEST_ROOT=test
+# input arg or set to a default
+PHP_VERSION=${1:-7.4}
+PHP_VARIANT=${2:-apache}
+WINTER_VERSION=${3:-1.1.10}
+
+TEST_ROOT=scripts
 SOURCE_ROOT=..
 
 if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
@@ -9,7 +14,7 @@ if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
 fi
 
 TEST_CONTAINER_NAME=test-wn-s3-media
-TEST_CONTAINER_TYPE=$SOURCE_ROOT/php8.0/apache
+TEST_CONTAINER_TYPE=$SOURCE_ROOT/images/php-$PHP_VERSION/$PHP_VARIANT/v$WINTER_VERSION
 TEST_CONTAINER_DOCKERFILE=Dockerfile
 
 # CREDENTIALS XXXX CHANGE TO TEST

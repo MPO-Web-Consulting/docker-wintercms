@@ -6,7 +6,7 @@ PHP_VARIANT=${2:-apache}
 WINTER_VERSION=${3:-1.1.10}
 
 # check if test is run in the right directory
-TEST_ROOT=test
+TEST_ROOT=scripts
 SOURCE_ROOT=..
 
 if [ "$(basename $(pwd))" != "$TEST_ROOT" ]; then
