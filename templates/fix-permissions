@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+# NOTE: run as root
+# fix permissions of /var/www/html
+# for web server user www-data
+
+echo "fixing permissions of /var/www/html"
+
+# change ownership of /var/www/html to www-data
+chown -R www-data:www-data /var/www/html
+
+# change permissions of directories
+find /var/www/html -type d -exec chmod 775 {} \;
+
+# change permissions of files
+find /var/www/html -type f -exec chmod 664 {} \;
+
+echo "permissions of /var/www/html fixed"
+
+exit 0

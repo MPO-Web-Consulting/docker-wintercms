@@ -8,3 +8,8 @@ build/
 
 # python
 *.py[cod]
+__pycache__/
+
+# pytest
+.pytest_cache/
+pytest.ini
