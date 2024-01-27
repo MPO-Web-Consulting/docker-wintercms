@@ -3,7 +3,10 @@
 # Docker + Winter CMS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Open in Visual Studio Code](https://img.shields.io/badge/vscode-dev-blue)](https://open.vscode.dev/MPO-Web-Consulting/docker-wintercms)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/mpo-web-consulting/docker-wintercms/8.2-apache-v1.2.4.yml)
 ![GitHub issues](https://img.shields.io/github/issues-raw/MPO-Web-Consulting/docker-wintercms)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7e554101c0b2db003d47/maintainability)](https://codeclimate.com/github/MPO-Web-Consulting/docker-wintercms/maintainability)
 [![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/)
 [![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-blueviolet.svg)](https://github.com/wintercms/winter)
 
