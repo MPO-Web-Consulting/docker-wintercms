@@ -3,5 +3,14 @@
 {
 	"name": "Python 3",
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.10-bookworm",
-	"postCreateCommand": "pip3 install --user -r requirements.txt"
+	"postCreateCommand": "python3 -m venv .venv && source .venv/bin/activate && pip install --user -r requirements.txt",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/docker-wintercms,type=bind,consistency=cached",
+	"workspaceFolder": "/docker-wintercms",
+	"remoteUser": "vscode",
+	"customizations": {
+		"extensions": [
+			"ms-python.python",
+			"ms-python.vscode-pylance"
+		]
+	}
 }
