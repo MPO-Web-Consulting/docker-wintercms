@@ -1,5 +1,5 @@
 # github action for building and pushing docker images
-name: Build, test, and publish Docker Image tagged {{ TEMPLATE_TAG }}
+name: Build, test, publish wintercms:{{ TEMPLATE_TAG }}
 
 env:
   OWNER: mpo-web-consulting
@@ -63,7 +63,7 @@ jobs:
 
       - name: Build image 🛠
         run: |
-          docker build --rm --force-rm --tag ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:latest -f {{ TEMPLATE_DOCKERFILE }} {{ TEMPLATE_DOCKER_CONTEXT }}
+          docker build --rm --force-rm --tag ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:latest -f {{TEMPLATE_DOCKERFILE}} {{TEMPLATE_DOCKER_CONTEXT}}
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
