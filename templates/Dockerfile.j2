@@ -86,6 +86,9 @@ RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /pro
 RUN a2enmod rewrite
 {% endif -%}
 
+# copy fix permissions script
+COPY docker-wn-fix-permissions /usr/local/bin/
+
 # entrypoint
 COPY docker-wn-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-wn-entrypoint"]

@@ -72,4 +72,10 @@ if [ "${INIT_WINTER,,}" == "true" ]; then
   fi
 fi
 
+# install listed plugins using composer require (space separated list)
+if [ ! -z "$COMPOSER_REQUIRE" ]; then
+  echo 'composer require...'
+  composer require $COMPOSER_REQUIRE
+fi
+
 exec "$@"

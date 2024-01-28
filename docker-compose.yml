@@ -1,6 +1,0 @@
-version: '2.2'
-services:
-  wintercms:
-    image: hiltonbanes/wintercms
-    ports:
-      - 8080:80
