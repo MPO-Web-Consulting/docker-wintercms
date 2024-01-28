@@ -1,0 +1,17 @@
+apiVersion: v2
+name: wintercms
+description: A Helm chart for WinterCMS
+type: application
+version: 0.1.0
+appVersion: "1.2.4"
+
+dependencies:
+  - name: postgresql
+    version: "12.1.*"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+
+  - name: redis
+    version: "18.5.*"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
