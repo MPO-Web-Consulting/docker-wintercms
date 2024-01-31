@@ -4,16 +4,65 @@
 # fix permissions of /var/www/html
 # for web server user www-data
 
-echo "fixing permissions of /var/www/html"
+# parse arguments
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -h|--help)
+    echo "usage: docker-wn-fix-permissions"
+    echo "fix permissions of /var/www/html"
+    echo "for web server user www-data"
+    exit 0
+    ;;
+    *)
+    echo "unknown option $1"
+    exit 1
+    ;;
+esac
+done
 
-# change ownership of /var/www/html to www-data
-chown -R www-data:www-data /var/www/html
+echo "fixing permissions of /var/www/html..."
+
+# check if root
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit 1
+fi
+
+# change ownership of /var/www/html/vendor to www-data
+echo "changing ownership of /var/www/html/vender to www-data..."
+chown -R www-data:www-data /var/www/html/vendor
+chown -R www-data:www-data /var/www/html/storage
+
+# change group of /var/www/html to www-data
+echo "changing group of /var/www/html to www-data..."
+chgrp -R www-data /var/www/html
 
 # change permissions of directories
-find /var/www/html -type d -exec chmod 775 {} \;
+# read only for others
+echo "changing permissions of directories to 755..."
+find /var/www/html -type d -exec chmod 755 {} \;
+
+# writable for group in themes, plugins and storage
+echo "changing permissions of themes, plugins and storage to 775..."
+chmod 765 /var/www/html/themes
+find /var/www/html/themes -type d -exec chmod 775 {} \;
+chmod 765 /var/www/html/plugins
+find /var/www/html/plugins -type d -exec chmod 775 {} \;
+chmod 765 /var/www/html/storage
+find /var/www/html/storage -type d -exec chmod 775 {} \;
 
 # change permissions of files
-find /var/www/html -type f -exec chmod 664 {} \;
+# read only for others
+echo "changing permissions of files to 644..."
+find /var/www/html -type f -exec chmod 644 {} \;
+
+# writable for group in themes, plugins and storage
+echo "changing permissions of themes, plugins and storage to 664..."
+find /var/www/html/themes -type f -exec chmod 664 {} \;
+find /var/www/html/plugins -type f -exec chmod 664 {} \;
+find /var/www/html/storage -type f -exec chmod 664 {} \;
 
 echo "permissions of /var/www/html fixed"
 

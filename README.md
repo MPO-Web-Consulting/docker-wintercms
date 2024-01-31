@@ -219,55 +219,34 @@ services:
       - web
 ```
 
-## Self Signed Certificates
+## Self Signed Certificates & Let's Encrypt
 
-Sometimes encyption is useful for testing. Self signed certs can be added by extending the image in another dockerfile:
+The apache images are configured to use self signed certificates by default.
 
-```dockerfile
-# Dockerfile for apache with self signed certificates
-
-FROM ghcr.io/mpo-web-consulting/wintercms:develop-php8.0-apache
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    ssl-cert && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod ssl; \
-    a2ensite default-ssl;
-
-EXPOSE 443
-
-CMD ["apache2-foreground"]
-```
-
-From a docker compose file build with:
-
-```yml
+```yaml
 version: '2.2'
 services:
   web:
-    build: <Dockerfile> # Dockerfile should match file defined in example above
+    image: ghcr.io/mpo-web-consulting/wintercms:latest
     ports:
       - 8080:80
-      - 8443:443
-    environment:
-      - DB_TYPE=mysql
-      - DB_HOST=mariadb #DB_HOST should match the service name of the database container
-      - DB_DATABASE=wintercms
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
-    volumes:
-      # ssl certs could also be volume mapped from elsewhere
-      # - .certs/cert.pem:/etc/ssl/certs/ssl-cert-snakeoil.pem:ro
-      # - .certs/key.key:/etc/ssl/private/ssl-cert-snakeoil.key:ro
+      - 8443:443 # ssl port
+```
 
-  mariadb:
-    image: mariadb:10.4
-    command: --default-authentication-plugin=mysql_native_password
+To use Let's Encrypt, set the environment variable `INIT_CERTBOT` to `true` and provide the domain and email address for the certificate.
+
+```yaml
+version: '2.2'
+services:
+  web:
+    image: ghcr.io/mpo-web-consulting/wintercms:latest
+    ports:
+      - 80:80 # needs to be exposed for certbot to work
+      - 443:443 # needs to be exposed for certbot to work
     environment:
-      - MYSQL_DATABASE=wintercms
-      - MYSQL_ROOT_PASSWORD=root
+      - INIT_CERTBOT=true
+      - LETSENCRYPT_HOST=example.com
+      - LETSENCRYPT_EMAIL=user@domain.tld
 ```
 
 ## Command Line Tasks
@@ -338,6 +317,7 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | FWD_REMOTE_IP | false | `true` enables remote IP forwarding from proxy (Apache) |
 | INIT_WINTER | false | `true` runs winter up on container start |
 | CMS_ADMIN_PASSWORD |  | Sets CMS admin password if INIT_WINTER `true` |
+| COMPOSER_MERGE_PLUGINS | false | `true` adds merge plugins into the base composer.json |
 | COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins (with persistent storage this will only run once) |
 | COMPOSER_REQUIRE |  | runs composer require with the provided space seperated list of winter plugins (or any required composer package) |
 | PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-wn-php.ini |
@@ -345,6 +325,9 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-wn-php.ini |
 | PHP_UPLOAD_MAX_FILESIZE | 32M | Override value for `upload_max_filesize` in docker-wn-php.ini |
 | VERSION_INFO | false | `true` outputs container current commit, php version, and dependency info on start |
+| INIT_CERTBOT | false | `true` runs certbot to generate ssl certificates for the container |
+| LETSENCRYPT_HOST |  | Sets the domain for certbot to generate a certificate for |
+| LETSENCRYPT_EMAIL |  | Sets the email for certbot to use when generating a certificate |
 
 ### Winter CMS app environment config
 

@@ -51,12 +51,11 @@ elif [ "$1" == cron ]; then
   php artisan schedule:run
 fi
 
-# update winter and plugins using composer update
-if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
-  echo 'composer updating...'
-  composer update
-
-  chgrp -R www-data plugins/
+# modify base composer.json to include plugins for merge plugin
+# this is useful for development environments with mounted plugins
+if [ "${COMPOSER_MERGE_PLUGINS,,}" == "true" ]; then
+  echo 'composer merge plugins...'
+  composer config --merge extra.merge-plugin.include 'plugins/*/*/composer.json'
 fi
 
 # Run winter up on container start
@@ -68,14 +67,39 @@ if [ "${INIT_WINTER,,}" == "true" ]; then
   # if the environment option for admin password is set then change it here
   if [ ! -z "$CMS_ADMIN_PASSWORD" ]; then
     echo 'Update Winter CMS admin password...'
-	  php artisan winter:passwd admin $CMS_ADMIN_PASSWORD
+    # try with lower case first and catch error
+    php artisan winter:passwd admin $CMS_ADMIN_PASSWORD || (true && echo 'admin user not found, trying with upper case...')
+    # try with upper case
+    php artisan winter:passwd Admin $CMS_ADMIN_PASSWORD
   fi
+fi
+
+# update winter and plugins using composer update
+if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
+  echo 'composer updating...'
+  composer update
+
+  docker-wn-fix-permissions
 fi
 
 # install listed plugins using composer require (space separated list)
 if [ ! -z "$COMPOSER_REQUIRE" ]; then
   echo 'composer require...'
   composer require $COMPOSER_REQUIRE
+
+  docker-wn-fix-permissions
+fi
+
+# run certbot setup one time
+CERTBOT_MARK_FILE=.certbot_did_initialise
+if [ "${INIT_CERTBOT,,}" == "true" ] && [[ ! -f "$CERTBOT_MARK_FILE" ]]; then
+	echo "setting up certbot to run later (in 5 minutes)..."
+	# setup a timer to run certbot setup after a given time
+	# this should allow the apache server to get up and running
+	# before responding to the http-01 challenge
+	# it this fails then it will have to be set up manually
+	# drop a file to indicate that certbot did run once and next start (if persistent data) don't run again
+	certbot -n --agree-tos --apache --email $LETSENCRYPT_EMAIL -d $LETSENCRYPT_HOST && touch $CERTBOT_MARK_FILE | at now + 5 min
 fi
 
 exec "$@"

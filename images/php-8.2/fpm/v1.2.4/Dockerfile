@@ -81,6 +81,9 @@ RUN chown -R www-data:www-data /var/www/html && \
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \
 	crontab /etc/cron.d/winter-cron
 
+# copy fix permissions script
+COPY docker-wn-fix-permissions /usr/local/bin/
+
 # entrypoint
 COPY docker-wn-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-wn-entrypoint"]

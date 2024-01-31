@@ -22,6 +22,20 @@ RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
     libzip-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# install default ssl site conf for apache
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	ssl-cert \
+	certbot \
+	python3-certbot-apache \
+	at && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod ssl; \
+	a2ensite default-ssl;
+
+EXPOSE 80
+EXPOSE 443
 # Install PHP extensions
 RUN docker-php-ext-configure zip --with-zip && \
 	docker-php-ext-configure gd --with-jpeg --with-webp && \
@@ -83,6 +97,9 @@ RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /pro
 
 # enable mod rewrite
 RUN a2enmod rewrite
+# copy fix permissions script
+COPY docker-wn-fix-permissions /usr/local/bin/
+
 # entrypoint
 COPY docker-wn-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-wn-entrypoint"]

@@ -22,6 +22,23 @@ RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
     libzip-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+{% if TEMPLATE_PHP_VARIANT == 'apache' -%}
+# install default ssl site conf for apache
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	ssl-cert \
+	certbot \
+	python3-certbot-apache \
+	at && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod ssl; \
+	a2ensite default-ssl;
+
+EXPOSE 80
+EXPOSE 443
+{% endif -%}
+
 # Install PHP extensions
 RUN docker-php-ext-configure zip --with-zip && \
 	docker-php-ext-configure gd --with-jpeg --with-webp && \
