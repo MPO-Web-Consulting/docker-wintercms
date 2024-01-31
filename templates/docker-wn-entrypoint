@@ -31,7 +31,7 @@ fi
 if [ "${VERSION_INFO,,}" == "true" ]; then
   php --version | grep PHP -m 1
   composer info | grep winter | awk '{print $1 ": " $2}'
-  php artisan winter:version
+  php artisan winter:version || (true && echo 'winter:version failed, dependencies probably not installed yet...')
   echo "---"
 fi
 
@@ -51,11 +51,31 @@ elif [ "$1" == cron ]; then
   php artisan schedule:run
 fi
 
+# install listed plugins using composer require (space separated list)
+REQUIRE_MARK_FILE=.composer_did_require
+if [ ! -z "$COMPOSER_REQUIRE" ] && [[ ! -f "$REQUIRE_MARK_FILE" ]]; then
+  echo 'composer require...'
+  composer require --no-scripts $COMPOSER_REQUIRE && touch $REQUIRE_MARK_FILE
+
+  docker-wn-fix-permissions
+fi
+
 # modify base composer.json to include plugins for merge plugin
 # this is useful for development environments with mounted plugins
-if [ "${COMPOSER_MERGE_PLUGINS,,}" == "true" ]; then
+MERGE_PLUGINS_MARK_FILE=.composer_did_merge_plugins
+if [ "${COMPOSER_MERGE_PLUGINS,,}" == "true" ] && [[ ! -f "$MERGE_PLUGINS_MARK_FILE" ]]; then
   echo 'composer merge plugins...'
-  composer config --merge extra.merge-plugin.include 'plugins/*/*/composer.json'
+  composer config --merge extra.merge-plugin.include 'plugins/*/*/composer.json' && composer install --no-scripts && touch $MERGE_PLUGINS_MARK_FILE
+
+  docker-wn-fix-permissions
+fi
+
+# update winter and plugins using composer update
+if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
+  echo 'composer updating...'
+  composer update
+
+  docker-wn-fix-permissions
 fi
 
 # Run winter up on container start
@@ -68,26 +88,16 @@ if [ "${INIT_WINTER,,}" == "true" ]; then
   if [ ! -z "$CMS_ADMIN_PASSWORD" ]; then
     echo 'Update Winter CMS admin password...'
     # try with lower case first and catch error
-    php artisan winter:passwd admin $CMS_ADMIN_PASSWORD || (true && echo 'admin user not found, trying with upper case...')
-    # try with upper case
-    php artisan winter:passwd Admin $CMS_ADMIN_PASSWORD
+    php artisan winter:passwd admin $CMS_ADMIN_PASSWORD || \
+    (
+      true && echo 'admin user not found, trying with upper case...' && \
+      # try with upper case
+      php artisan winter:passwd Admin $CMS_ADMIN_PASSWORD || \
+      (
+        true && echo 'Admin user not found! unable to set password!'
+      )
+    )
   fi
-fi
-
-# update winter and plugins using composer update
-if [ "${COMPOSER_UPDATE,,}" == "true" ] || [ "${COMPOSER_UPDATE,,}" == "force" ]; then
-  echo 'composer updating...'
-  composer update
-
-  docker-wn-fix-permissions
-fi
-
-# install listed plugins using composer require (space separated list)
-if [ ! -z "$COMPOSER_REQUIRE" ]; then
-  echo 'composer require...'
-  composer require $COMPOSER_REQUIRE
-
-  docker-wn-fix-permissions
 fi
 
 # run certbot setup one time
