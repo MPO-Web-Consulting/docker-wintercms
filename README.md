@@ -317,15 +317,15 @@ The following variables trigger actions run by the [entrypoint script](./docker-
 | FWD_REMOTE_IP | false | `true` enables remote IP forwarding from proxy (Apache) |
 | INIT_WINTER | false | `true` runs winter up on container start |
 | CMS_ADMIN_PASSWORD |  | Sets CMS admin password if INIT_WINTER `true` |
-| COMPOSER_MERGE_PLUGINS | false | `true` adds merge plugins into the base composer.json |
-| COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins (with persistent storage this will only run once) |
-| COMPOSER_REQUIRE |  | runs composer require with the provided space seperated list of winter plugins (or any required composer package) |
+| COMPOSER_MERGE_PLUGINS | false | `true` adds merge plugins into the base composer.json. This should only run once |
+| COMPOSER_UPDATE | false | `true` runs composer update in the base laravel directory to update winter and plugins |
+| COMPOSER_REQUIRE |  | runs composer require with the provided space seperated list of winter plugins (or any required composer package). This should only run once |
 | PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-wn-php.ini |
 | PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-wn-php.ini |
 | PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-wn-php.ini |
 | PHP_UPLOAD_MAX_FILESIZE | 32M | Override value for `upload_max_filesize` in docker-wn-php.ini |
 | VERSION_INFO | false | `true` outputs container current commit, php version, and dependency info on start |
-| INIT_CERTBOT | false | `true` runs certbot to generate ssl certificates for the container |
+| INIT_CERTBOT | false | `true` runs certbot to generate ssl certificates for the container. This should only run once |
 | LETSENCRYPT_HOST |  | Sets the domain for certbot to generate a certificate for |
 | LETSENCRYPT_EMAIL |  | Sets the email for certbot to use when generating a certificate |
 
