@@ -78,6 +78,10 @@ RUN { \
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/local/bin --filename=composer
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+   apt-get install -y nodejs
+
 # install wintercms, set laravel env, and create database
 RUN composer create-project --prefer-dist wintercms/winter:{{ TEMPLATE_WINTERCMS_VERSION }} . && \
     echo 'APP_ENV=docker' > .env && \
