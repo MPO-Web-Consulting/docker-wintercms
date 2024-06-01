@@ -2,7 +2,7 @@
 # do not modify it directly, modify the template instead
 # template: templates/Dockerfile.develop.j2
 
-FROM php:8.2-fpm
+FROM php:8.2-apache
 
 # Install dependencies
 RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
@@ -22,6 +22,20 @@ RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
     libzip-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# install default ssl site conf for apache
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	ssl-cert \
+	certbot \
+	python3-certbot-apache \
+	at && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod ssl; \
+	a2ensite default-ssl;
+
+EXPOSE 80
+EXPOSE 443
 # Install PHP extensions
 RUN docker-php-ext-configure zip --with-zip && \
 	docker-php-ext-configure gd --with-jpeg --with-webp && \
@@ -66,7 +80,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash 
     nvm install 20
 
 # install wintercms, set laravel env, and create database
-RUN composer create-project --prefer-dist wintercms/winter:1.2.4 . && \
+RUN composer create-project --prefer-dist wintercms/winter:1.2.6 . && \
     echo 'APP_ENV=docker' > .env && \
 	touch storage/database.sqlite
 
@@ -85,6 +99,8 @@ RUN chown -R www-data:www-data /var/www/html && \
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \
 	crontab /etc/cron.d/winter-cron
 
+# enable mod rewrite
+RUN a2enmod rewrite
 # copy fix permissions script
 COPY docker-wn-fix-permissions /usr/local/bin/
 
@@ -93,4 +109,4 @@ COPY docker-wn-entrypoint /usr/local/bin/
 ENTRYPOINT ["docker-wn-entrypoint"]
 
 # command
-CMD ["php-fpm"]
+CMD ["apache2-foreground"]

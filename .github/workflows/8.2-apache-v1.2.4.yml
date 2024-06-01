@@ -88,7 +88,5 @@ jobs:
           file: images/php-8.2/apache/v1.2.4/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:${{steps.get_sha.outputs.sha12}}
             ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:8.2-apache-v1.2.4
             ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:8.2-apache-v1.2.4-${{steps.get_sha.outputs.sha12}}

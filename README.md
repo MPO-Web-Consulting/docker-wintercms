@@ -414,7 +414,7 @@ Use the following commands to generate the images and github actions files:
 python3 scripts/generate_images.py templates/Dockerfile.j2 images images.yaml
 
 # generate actions for all images
-python3 scripts/generate_workflows.py templates/action.yml.j2 images .github/workflows
+python3 scripts/generate_actions.py templates/action.yml.j2 images .github/workflows
 ```
 
 ### Adding a new Winter CMS Build

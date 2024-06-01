@@ -1,5 +1,5 @@
 # github action for building and pushing docker images
-name: Build, test, publish wintercms:{{ TEMPLATE_TAG }}
+name: Build, test, publish wintercms:8.2-fpm-v1.2.5
 
 env:
   OWNER: mpo-web-consulting
@@ -31,7 +31,7 @@ on:
 # https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
   # only cancel in-progress jobs or runs for the current workflow - matches against branch & tags
-  group: ${{'{{'}} github.workflow {{'}}'}}-${{'{{'}} github.ref {{'}}'}}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Build image 🛠
         run: |
-          docker build --rm --force-rm --tag ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:latest -f {{TEMPLATE_DOCKERFILE}} {{TEMPLATE_DOCKER_CONTEXT}}
+          docker build --rm --force-rm --tag ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:latest -f images/php-8.2/fpm/v1.2.5/Dockerfile templates
         env:
           DOCKER_BUILDKIT: 1
           # Full logs for CI build
@@ -76,21 +76,17 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
-          registry: ${{ '{{' }} env.REGISTRY {{ '}}' }}
-          username: ${{ '{{' }} github.actor {{ '}}' }}
-          password: ${{ '{{' }} secrets.GITHUB_TOKEN {{ '}}' }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Image to container registry 📤
         uses: docker/build-push-action@v5
         if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         with:
-          context: {{ TEMPLATE_DOCKER_CONTEXT }}/
-          file: {{ TEMPLATE_DOCKERFILE }}
+          context: templates/
+          file: images/php-8.2/fpm/v1.2.5/Dockerfile
           push: true
           tags: |
-            {% if TEMPLATE_TAG == '8.2-apache-v1.2.6' -%}
-            ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:latest
-            ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:${{'{{'}}steps.get_sha.outputs.sha12{{'}}'}}
-            {% endif -%}
-            ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:{{ TEMPLATE_TAG }}
-            ${{'{{'}} env.REGISTRY {{'}}'}}/${{'{{'}} env.OWNER {{'}}'}}/${{'{{'}} env.IMAGE_NAME {{'}}'}}:{{ TEMPLATE_TAG }}-${{'{{'}}steps.get_sha.outputs.sha12{{'}}'}}
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:8.2-fpm-v1.2.5
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE_NAME }}:8.2-fpm-v1.2.5-${{steps.get_sha.outputs.sha12}}

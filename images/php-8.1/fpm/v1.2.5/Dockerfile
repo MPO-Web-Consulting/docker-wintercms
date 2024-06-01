@@ -2,7 +2,7 @@
 # do not modify it directly, modify the template instead
 # template: templates/Dockerfile.develop.j2
 
-FROM php:8.2-fpm
+FROM php:8.1-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
@@ -66,7 +66,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash 
     nvm install 20
 
 # install wintercms, set laravel env, and create database
-RUN composer create-project --prefer-dist wintercms/winter:1.2.4 . && \
+RUN composer create-project --prefer-dist wintercms/winter:1.2.5 . && \
     echo 'APP_ENV=docker' > .env && \
 	touch storage/database.sqlite
 

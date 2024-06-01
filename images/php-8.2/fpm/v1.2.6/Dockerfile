@@ -66,7 +66,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash 
     nvm install 20
 
 # install wintercms, set laravel env, and create database
-RUN composer create-project --prefer-dist wintercms/winter:1.2.4 . && \
+RUN composer create-project --prefer-dist wintercms/winter:1.2.6 . && \
     echo 'APP_ENV=docker' > .env && \
 	touch storage/database.sqlite
 
