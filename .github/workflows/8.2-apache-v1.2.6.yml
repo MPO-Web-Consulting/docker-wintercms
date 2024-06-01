@@ -1,5 +1,5 @@
 # github action for building and pushing docker images
-name: Build, test, publish wintercms:8.2-apache-v1.2.6
+name: wintercms:8.2-apache-v1.2.6 🐳 Build, test, publish
 
 env:
   OWNER: mpo-web-consulting
