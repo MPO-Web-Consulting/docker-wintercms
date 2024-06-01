@@ -4,11 +4,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Open in Visual Studio Code](https://img.shields.io/badge/vscode-dev-blue)](https://open.vscode.dev/MPO-Web-Consulting/docker-wintercms)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/mpo-web-consulting/docker-wintercms/8.2-apache-v1.2.4.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/mpo-web-consulting/docker-wintercms/8.2-apache-v1.2.6.yml)
 ![GitHub issues](https://img.shields.io/github/issues-raw/MPO-Web-Consulting/docker-wintercms)
+![Pull Requests](https://img.shields.io/github/issues-pr/MPO-Web-Consulting/docker-wintercms)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7e554101c0b2db003d47/maintainability)](https://codeclimate.com/github/MPO-Web-Consulting/docker-wintercms/maintainability)
+![GitHub Release](https://img.shields.io/github/v/release/MPO-Web-Consulting/docker-wintercms)
+[![Winter CMS Build v1.2.6](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.6-blueviolet.svg)](https://github.com/wintercms/winter)
 [![Docker Hub Pulls](https://img.shields.io/docker/pulls/hiltonbanes/wintercms.svg)](https://hub.docker.com/r/hiltonbanes/wintercms/)
-[![Winter CMS Build v1.2.4](https://img.shields.io/badge/Winter%20CMS%20Build-v1.2.4-blueviolet.svg)](https://github.com/wintercms/winter)
 
 [![Buy me a tree](https://img.shields.io/badge/Buy%20me%20a%20tree-%F0%9F%8C%B3-green)](https://ecologi.com/mik-p-online?gift-trees)
 [![Plant a Tree for Production](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/MPO-Web-Consulting/docker-wintercms)
@@ -42,6 +44,8 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 ![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.2-blueviolet.svg)
 ![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.3-blueviolet.svg)
 ![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.4-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.5-blueviolet.svg)
+![WinterCMS](https://img.shields.io/badge/WinterCMS-v1.2.6-blueviolet.svg)
 
 ### Supported Tags
 
@@ -51,7 +55,7 @@ The following tags are examples:
 
 | Winter CMS Build | PHP Version | Web Server | Tag |
 | ---------------- | ----------- | ---------- | --- |
-| 1.2.4 | 8.2 | Apache | `8.2-apache-v1.2.4`, `latest` |
+| 1.2.6 | 8.2 | Apache | `8.2-apache-v1.2.6`, `latest` |
 | 1.2.3 | 8.0 | FPM | `8.0-fpm-v1.2.3` |
 
 ## Quick Start
