@@ -63,12 +63,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/l
 
 # install latest nodejs via nvm (Node Version Manager)
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+    export NVM_DIR="/root/.nvm" && \
+    [ -s "/root/.nvm/nvm.sh" ] && \. "/root/.nvm/nvm.sh" && \
     nvm install 20
 
 # install wintercms, set laravel env, and create database
 RUN composer create-project --prefer-dist wintercms/winter:1.2.4 . && \
     echo 'APP_ENV=docker' > .env && \
-	touch storage/database.sqlite
+    touch storage/database.sqlite
 
 # get laravel env config files
 COPY config/docker config/docker
@@ -83,7 +85,7 @@ RUN chown -R www-data:www-data /var/www/html && \
 
 # Initialize crontab for the Winter CMS scheduler
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/winter-cron && \
-	crontab /etc/cron.d/winter-cron
+    crontab /etc/cron.d/winter-cron
 
 # copy fix permissions script
 COPY docker-wn-fix-permissions /usr/local/bin/

@@ -24,7 +24,7 @@ RUN apt-get update && apt-get upgrade --no-install-recommends -y && \
 
 # Install PHP extensions
 RUN docker-php-ext-configure zip --with-zip && \
-    docker-php-ext-configure gd --with-jpeg --with-webp && \
+	docker-php-ext-configure gd --with-jpeg --with-webp && \
     docker-php-ext-install \
     exif \
     gd \
@@ -41,22 +41,22 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Recommended opcache settings - https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
-    echo 'opcache.memory_consumption=128'; \
-    echo 'opcache.interned_strings_buffer=8'; \
-    echo 'opcache.max_accelerated_files=4000'; \
-    echo 'opcache.revalidate_freq=2'; \
-    echo 'opcache.fast_shutdown=1'; \
-    echo 'opcache.enable_cli=1'; \
-    } > /usr/local/etc/php/conf.d/docker-wn-opcache.ini
+	echo 'opcache.memory_consumption=128'; \
+	echo 'opcache.interned_strings_buffer=8'; \
+	echo 'opcache.max_accelerated_files=4000'; \
+	echo 'opcache.revalidate_freq=2'; \
+	echo 'opcache.fast_shutdown=1'; \
+	echo 'opcache.enable_cli=1'; \
+	} > /usr/local/etc/php/conf.d/docker-wn-opcache.ini
 
 RUN { \
-    echo 'log_errors=on'; \
-    echo 'display_errors=off'; \
-    echo 'upload_max_filesize=32M'; \
-    echo 'post_max_size=32M'; \
-    echo 'memory_limit=128M'; \
+	echo 'log_errors=on'; \
+	echo 'display_errors=off'; \
+	echo 'upload_max_filesize=32M'; \
+	echo 'post_max_size=32M'; \
+	echo 'memory_limit=128M'; \
     echo 'expose_php=off'; \
-    } > /usr/local/etc/php/conf.d/docker-wn-php.ini
+	} > /usr/local/etc/php/conf.d/docker-wn-php.ini
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/local/bin --filename=composer
