@@ -41,8 +41,8 @@ if __name__ == '__main__':
         # keep the file name to template the dockerfile in later
         if 'Dockerfile' in files:
             images_tags.append({
-                'tag': root.removeprefix(
-                    args.images_dir + '/').removeprefix('php-').replace('/', '-'),
+                'tag': root.replace(
+                    args.images_dir + '/', '').replace('php-', '').replace('/', '-'),
                 'dockerfile': os.path.join(root, 'Dockerfile'),
             })
 

@@ -78,9 +78,12 @@ RUN { \
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --2 --install-dir=/usr/local/bin --filename=composer
 
+{% if TEMPLATE_PHP_VERSION != '7.4' -%}
 # install latest nodejs via nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
     nvm install 20
+
+{% endif -%}
 
 # install wintercms, set laravel env, and create database
 RUN composer create-project --prefer-dist wintercms/winter:{{ TEMPLATE_WINTERCMS_VERSION }} . && \
@@ -105,6 +108,7 @@ RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /pro
 {% if TEMPLATE_PHP_VARIANT == 'apache' -%}
 # enable mod rewrite
 RUN a2enmod rewrite
+
 {% endif -%}
 
 # copy fix permissions script

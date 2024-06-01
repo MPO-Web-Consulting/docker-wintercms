@@ -101,6 +101,7 @@ RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /pro
 
 # enable mod rewrite
 RUN a2enmod rewrite
+
 # copy fix permissions script
 COPY docker-wn-fix-permissions /usr/local/bin/
 
